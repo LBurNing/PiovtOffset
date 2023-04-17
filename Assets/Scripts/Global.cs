@@ -10,9 +10,9 @@ public class Global
 
     public static string root = Application.dataPath;
 #if UNITY_EDITOR
-    public static string rotationImageToolPath = root + "/../rotateImage.exe";
+    public static string rotationImageToolPath = root + "/../Rotate.exe";
 #elif UNITY_STANDALONE
-    public static string rotationImageToolPath = root + "/../rotateImage.exe";
+    public static string rotationImageToolPath = root + "/../Rotate.exe";
 #endif
 
     public static void InitTransparentColor()
