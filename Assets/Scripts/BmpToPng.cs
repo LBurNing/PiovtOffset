@@ -84,6 +84,8 @@ public class BmpToPng
                 float b = color.b;
                 float a = color.a;
                 float addColorValue = 0;
+                float effectAddColor = 10;
+                float effectAlphaSize = 0.9f;
 
                 if (r == 0 && g == 0 && b == 0)
                 {
@@ -91,22 +93,19 @@ public class BmpToPng
                 }
                 else
                 {
-                    if (bmpData.effectAlpha)
-                    {
-                        float alpha = color.grayscale;
-                        
-                        if (a > 0)
-                        {
-                            alpha = alpha + alpha / bmpData.effectAlphaSize;
-                            addColorValue = color.grayscale / bmpData.effectAddColor;
-                        }
+                    float alpha = color.grayscale;
 
-                        a = alpha;
+                    if (a > 0)
+                    {
+                        alpha = alpha + alpha / effectAlphaSize;
+                        addColorValue = color.grayscale / effectAddColor;
                     }
+
+                    a = alpha;
                 }
 
                 color = new Color(r + addColorValue, g + addColorValue, b + addColorValue, a);
-                pngTexture.SetPixel(colori + startX, colorj + StartY, color);
+                pngTexture.SetPixel(colori, colorj, color);
             }
         }
 

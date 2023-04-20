@@ -76,6 +76,40 @@ public class PlayAnim : MonoBehaviour
         }
     }
 
+    public bool horMirror
+    {
+        get
+        {
+            return transform.localScale.x < 0;
+        }
+    }
+
+    public bool verMirror
+    {
+        get
+        {
+            return transform.localScale.y < 0;
+        }
+    }
+
+    public void Mirror(bool horizontal)
+    {
+        float x = transform.localScale.x;
+        float y = transform.localScale.y;
+
+        if (horizontal)
+        {
+            x = transform.localScale.x < 0 ? Mathf.Abs(transform.localScale.x) : -transform.localScale.x;
+        }
+        else
+        {
+            y = transform.localScale.y < 0 ? Mathf.Abs(transform.localScale.y) : -transform.localScale.y;
+        }
+
+
+        transform.localScale = new Vector3(x, y, transform.localScale.z);
+    }
+
     public void Dispose()
     {
         _index = 0;

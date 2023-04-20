@@ -58,7 +58,6 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\UpdateBtnText.cs" />
     <Compile Include="Assets\Scripts\BmpToPng.cs" />
-    <Compile Include="Assets\Scripts\PivotOffset.cs" />
     <Compile Include="Assets\Scripts\CutTexture.cs" />
     <Compile Include="Assets\Scripts\TextureHelper.cs" />
     <Compile Include="Assets\Scripts\DialogOperate.cs" />
@@ -76,6 +75,7 @@
     <Compile Include="Assets\Scripts\Frames.cs" />
     <Compile Include="Assets\Scripts\Utils.cs" />
     <Compile Include="Assets\Scripts\CmdUtil.cs" />
+    <Compile Include="Assets\Scripts\ImageTools.cs" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

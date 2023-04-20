@@ -15,6 +15,9 @@ public class MainUI : MonoBehaviour
     private Button playModifyBtn;
     private Button refactorBtn;
     private Button expandAnimation;
+    private Button horizontal;
+    private Button vertical;
+    private Button alpha;
     private Toggle playFrame;
     private Toggle IrregularToggle;
     private Toggle isScale;
@@ -65,6 +68,9 @@ public class MainUI : MonoBehaviour
         playFrame = transform.Find("PlayFrame").GetComponent<Toggle>();
         IrregularToggle = transform.Find("IrregularToggle").GetComponent<Toggle>();
         isScale = transform.Find("Select/IsScale").GetComponent<Toggle>();
+        horizontal = transform.Find("Select/Horizontal").GetComponent<Button>();
+        alpha = transform.Find("Select/Alpha").GetComponent<Button>();
+        vertical = transform.Find("Select/Vertical").GetComponent<Button>();
 
         scaleWidth = transform.Find("Select/ScaleWidth").GetComponent<InputField>();
         scaleHeight = transform.Find("Select/ScaleHeight").GetComponent<InputField>();
@@ -98,10 +104,29 @@ public class MainUI : MonoBehaviour
         isScale.onValueChanged.AddListener(OnIsScaleValueChanged);
         ScaleScrollbar.onValueChanged.AddListener(OnScaleScrollbar);
         RotationScrollbar.onValueChanged.AddListener(onRotationScrollbar);
+        horizontal.onClick.AddListener(OnHorizontal);
+        vertical.onClick.AddListener(OnVertical);
+        alpha.onClick.AddListener(OnAlpha);
         irregularUI.MainUI = this;
 
         scaleWidth.text = itemBg.sizeDelta.x.ToString();
         scaleHeight.text = itemBg.sizeDelta.y.ToString();
+    }
+
+    private void OnAlpha()
+    {
+        ImageTools.BlendTexture(modifyPath.text);
+        PlayModifyAnim(modifyPath.text);
+    }
+
+    private void OnHorizontal()
+    {
+        modifyAnim?.Mirror(true);
+    }
+
+    private void OnVertical()
+    {
+        modifyAnim?.Mirror(false);
     }
 
     private void onRotationScrollbar(float value)
@@ -384,32 +409,9 @@ public class MainUI : MonoBehaviour
 
     private IEnumerator Export(Action<int, int> progressCallBack)
     {
-        int progress = 0;
-        int total = 0;
         string path = modifyPath.text;
-        string[] filePaths = Directory.GetFiles(path);
-        total = filePaths.Length;
-
-        while (progress < total)
-        {
-            if (frameUIs.Count == filePaths.Length)
-                modifyAnimaOffset = frameUIs[progress].offset;
-
-            string filePath = filePaths[progress];
-            if (isScale.isOn)
-            {
-                string outPath = Path.GetFullPath(filePath + "/../´ý»ú/") + ((int)MirDirection.Down + 1) * 1000 + progress + Path.GetExtension(filePath);
-                PivotOffset.ScaleTexture(filePath, "", curScale, modifyAnimaOffset);
-            }
-            else
-            {
-                PivotOffset.Load(filePath, modifyAnimaOffset);
-            }
-            
-            progress++;
-            progressCallBack?.Invoke(progress, total);
-            yield return new WaitForSeconds(ExportRes.frameTime);
-        }
+        if (curScale != 1 || modifyAnimaOffset != Vector2Int.zero)
+            ImageTools.ScaleTexture(path, curScale, modifyAnimaOffset);
 
         yield return new WaitForSeconds(0.5f);
         ExportComplete();
@@ -431,16 +433,26 @@ public class MainUI : MonoBehaviour
 
     private void ExportComplete()
     {
-        SetScale(1);
-        selectIndex = -1;
-        ScaleScrollbar.value = 0.3333f;
-
         if (isScale.isOn && (modifyAnimaOffset == Vector2Int.zero))
         {
-            PivotOffset.Rotate(modifyPath.text, modifyAnim.transform.localRotation.eulerAngles.z);
+            ImageTools.Rotate(modifyPath.text, modifyAnim.transform.localRotation.eulerAngles.z);
             SetRotation(0);
             RotationScrollbar.value = 0;
         }
+
+        if (modifyAnim.horMirror)
+        {
+            ImageTools.Mirror(EmMirror.hor, modifyPath.text);
+        }
+
+        if (modifyAnim.verMirror)
+        {
+            ImageTools.Mirror(EmMirror.ver, modifyPath.text);
+        }
+
+        SetScale(1);
+        selectIndex = -1;
+        ScaleScrollbar.value = 0.3333f;
 
         DisposeFrameSprite();
         PlayModifyAnim(modifyPath.text);
