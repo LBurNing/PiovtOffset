@@ -56,11 +56,13 @@ public class ImageTools
 
     public static void BlendTexture(string path)
     {
+        path = path.Replace(@"\", "//");
         CmdUtil.ProcessCommand(Global.blendImageToolPath, string.Format("{0} {1}", path, path));
     }
 
     public static void ScaleTexture(string path, float proportion, Vector2Int offset)
     {
+        path = path.Replace(@"\", "//");
         CmdUtil.ProcessCommand(Global.scaleImageToolPath, string.Format("{0} {1} {2} {3} {4}", path, path, proportion, offset.x, offset.y));
     }
 
@@ -87,6 +89,7 @@ public class ImageTools
 
     public static void Mirror(EmMirror mirror, string path)
     {
+        path = path.Replace(@"\", "//");
         CmdUtil.ProcessCommand(Global.rotationImageToolPath, string.Format("{0} {1} {2}", path, 0, (int)mirror));
     }
 
@@ -96,6 +99,7 @@ public class ImageTools
         if (rotationAngle == 0 || rotationAngle == 360)
             return;
 
+        path = path.Replace(@"\", "//");
         CmdUtil.ProcessCommand(Global.rotationImageToolPath, string.Format("{0} {1} {2}", path, (int)rotationAngle, 0));
     }
 

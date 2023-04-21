@@ -5,6 +5,13 @@ using UnityEngine;
 
 public class LoadTexture
 {
+    public static List<string> GetFilePaths(string path)
+    {
+        List<Texture2D> texture2Ds = new List<Texture2D>();
+        List<string> filePaths = Utils.GetAllFileList(path, ".png");
+        return filePaths;
+    }
+
     public static List<Texture2D> Load(string path, int maxFrame = 0)
     {
         List<Texture2D> texture2Ds = new List<Texture2D>();
@@ -23,6 +30,16 @@ public class LoadTexture
         }
 
         return texture2Ds;
+    }
+
+    public static Texture2D LoadTex(string filePath)
+    {
+        byte[] buffer = File.ReadAllBytes(filePath);
+        Texture2D t2D = new Texture2D(1, 1);
+        t2D.LoadImage(buffer);
+        t2D.Apply();
+
+        return t2D;
     }
 
     public static void Dispose(List<Texture2D> texture2Ds)

@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class PlayAnim : MonoBehaviour
 {
     private List<Sprite> _sprites;
+    private List<string> _paths;
     public List<Texture2D> _texture2Ds;
 
     public float _time = 0.2f;
@@ -14,34 +15,46 @@ public class PlayAnim : MonoBehaviour
     private Image _image;
     public bool _autoPlay = true;
     public int _maxFrame = -1;
+    private bool _initTexture2d = false;
 
-    public List<Texture2D> texture2Ds 
+    public bool IsDispose
     {
         get 
-        {
-            return _texture2Ds;
-        } 
+        { 
+            return !_initTexture2d && _texture2Ds.Count > 0;
+        }
+    }
+
+    public List<string> Paths
+    {
         set 
         {
-            if (value == null)
-                return;
+            _paths = value;
+        }
+    }
 
-            Dispose();
-            _texture2Ds = value;
-            _sprites = new List<Sprite>();
-            foreach (Texture2D texture2D in value)
-            {
-                Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
-                _sprites.Add(sp);
-            }
-        } 
+    public void SetTexture2D(Texture2D texture2D, bool dispose = true)
+    {
+        if (!_initTexture2d)
+            _texture2Ds.Add(texture2D);
+
+        Sprite sp = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
+        _sprites.Add(sp);
     }
 
     private void Start()
     {
         _playerTime = _time;
         _image = GetComponent<Image>();
-        texture2Ds = _texture2Ds;
+        _sprites = new List<Sprite>();
+        _paths = new List<string>();
+        if (_texture2Ds.Count > 0)
+            _initTexture2d = true;
+
+        foreach (var value in _texture2Ds)
+        {
+            SetTexture2D(value, false);
+        }
     }
 
 
@@ -50,13 +63,10 @@ public class PlayAnim : MonoBehaviour
         if (!_autoPlay)
             return;
 
-        if (_sprites == null)
-            return;
-
         if (_image == null)
             return;
 
-        _maxFrame = _sprites.Count;
+        _maxFrame = _paths.Count;
         if (_maxFrame == 0)
             return;
 
@@ -69,6 +79,12 @@ public class PlayAnim : MonoBehaviour
             if (_index == _maxFrame)
             {
                 _index = 0;
+            }
+
+            if (_sprites.Count == _index)
+            {
+                Texture2D texture2D = LoadTexture.LoadTex(_paths[_index]);
+                SetTexture2D(texture2D);
             }
 
             _image.sprite = _sprites[_index];
@@ -112,7 +128,6 @@ public class PlayAnim : MonoBehaviour
 
     public void Dispose()
     {
-        _index = 0;
         if (_sprites != null)
         {
             foreach (Sprite sp in _sprites)
@@ -121,11 +136,13 @@ public class PlayAnim : MonoBehaviour
             }
 
             _sprites.Clear();
-            _image.sprite = null;
 
             LoadTexture.Dispose(_texture2Ds);
             _texture2Ds.Clear();
 
+            _paths.Clear();
         }
+
+        _index = -1;
     }
 }

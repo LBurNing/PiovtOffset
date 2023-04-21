@@ -373,10 +373,10 @@ public class MainUI : MonoBehaviour
         if (filePaths.Count > 50)
             return;
 
-        if (templeteAnim.texture2Ds != null)
-            LoadTexture.Dispose(templeteAnim.texture2Ds);
+        if (templeteAnim.IsDispose)
+            modifyAnim.Dispose();
 
-        templeteAnim.texture2Ds = LoadTexture.Load(path);
+        templeteAnim.Paths = filePaths;
     }
 
     private void OnModifyPathBtn()
@@ -395,11 +395,11 @@ public class MainUI : MonoBehaviour
         if (filePaths.Count > 100)
             return;
 
-        if (modifyAnim.texture2Ds != null)
-            LoadTexture.Dispose(modifyAnim.texture2Ds);
+        if (modifyAnim.IsDispose)
+            modifyAnim.Dispose();
 
         modifyAnim.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
-        modifyAnim.texture2Ds = LoadTexture.Load(path);
+        modifyAnim.Paths = filePaths;
     }
 
     private void OnExportClick()
