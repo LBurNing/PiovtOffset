@@ -6,6 +6,7 @@ using UnityEngine.UI;
 public class UpdateBtnText : MonoBehaviour
 {
     public Text textCom;
+    public GameObject Go;
 
     void Awake()
     {
@@ -22,6 +23,15 @@ public class UpdateBtnText : MonoBehaviour
         {
             if (textCom == null) return;
             textCom.text = value;
+        }
+    }
+
+    public Vector3 scale
+    {
+        set
+        {
+            if (Go == null) return;
+            Go.transform.localScale = value;
         }
     }
 }

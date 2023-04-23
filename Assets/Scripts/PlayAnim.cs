@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
@@ -13,9 +14,16 @@ public class PlayAnim : MonoBehaviour
     private int _index = -1;
     private float _playerTime;
     private Image _image;
-    public bool _autoPlay = true;
+    public bool _play = true;
     public int _maxFrame = -1;
     private bool _initTexture2d = false;
+    private Action<Vector2> _textureMaxSize;
+    private Vector2 _maxSize;
+
+    public Action<Vector2> textureMaxSize
+    {
+        set { _textureMaxSize = value; }
+    }
 
     public bool IsDispose
     {
@@ -60,7 +68,7 @@ public class PlayAnim : MonoBehaviour
 
     private void Update()
     {
-        if (!_autoPlay)
+        if (!_play)
             return;
 
         if (_image == null)
@@ -89,6 +97,19 @@ public class PlayAnim : MonoBehaviour
 
             _image.sprite = _sprites[_index];
             _image.SetNativeSize();
+
+            if (_textureMaxSize != null)
+            {
+                Vector2Int size = TextureHelper.CalculateBoundingBox(_image.sprite.texture);
+                if (size.x > _maxSize.x)
+                    _maxSize.x = size.x;
+
+                if (size.y > _maxSize.y)
+                    _maxSize.y = size.y;
+
+                _textureMaxSize.Invoke(_maxSize);
+                _textureMaxSize = null;
+            }
         }
     }
 
@@ -144,5 +165,7 @@ public class PlayAnim : MonoBehaviour
         }
 
         _index = -1;
+        _textureMaxSize = null;
+        _maxSize = Vector2.zero;
     }
 }

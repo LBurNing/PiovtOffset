@@ -35,13 +35,14 @@ public class MainUI : MonoBehaviour
     private RectTransform sprites;
     private RectTransform frames;
     private RectTransform itemBg;
+    private RectTransform box;
     private FrameUI templeteFrameUI;
     private IrregularUI irregularUI;
     private List<FrameUI> frameUIs;
 
     private Scrollbar ScaleScrollbar;
     private Scrollbar RotationScrollbar;
-
+    private Scrollbar CutScrollbar;
     private Dropdown dropdown;
     private Action<float> progressCallBack;
     private Coroutine exportCoroutine;
@@ -83,11 +84,13 @@ public class MainUI : MonoBehaviour
         sprites = transform.Find("Sprites").GetComponent<RectTransform>();
         frames = transform.Find("Frames").GetComponent<RectTransform>();
         itemBg = transform.Find("ItemBg").GetComponent<RectTransform>();
+        box = transform.Find("Box").GetComponent<RectTransform>();
         templeteFrameUI = transform.Find("Templete").GetComponent<FrameUI>();
         irregularUI = transform.Find("Irregular").GetComponent<IrregularUI>();
         dropdown = transform.Find("RefactorType/Dropdown").GetComponent<Dropdown>();
         ScaleScrollbar = transform.Find("Select/ScaleScrollbar").GetComponent<Scrollbar>();
         RotationScrollbar = transform.Find("Select/RotationScrollbar").GetComponent<Scrollbar>();
+        CutScrollbar = transform.Find("Select/CutScrollbar").GetComponent<Scrollbar>();
 
         exportBtn.onClick.AddListener(OnExportClick);
         templeteBtn.onClick.AddListener(OnTempletePathBtn);
@@ -104,6 +107,7 @@ public class MainUI : MonoBehaviour
         isScale.onValueChanged.AddListener(OnIsScaleValueChanged);
         ScaleScrollbar.onValueChanged.AddListener(OnScaleScrollbar);
         RotationScrollbar.onValueChanged.AddListener(onRotationScrollbar);
+        RotationScrollbar.onValueChanged.AddListener(onCutScrollbar);
         horizontal.onClick.AddListener(OnHorizontal);
         vertical.onClick.AddListener(OnVertical);
         alpha.onClick.AddListener(OnAlpha);
@@ -127,6 +131,11 @@ public class MainUI : MonoBehaviour
     private void OnVertical()
     {
         modifyAnim?.Mirror(false);
+    }
+
+    private void onCutScrollbar(float value)
+    {
+
     }
 
     private void onRotationScrollbar(float value)
@@ -161,6 +170,7 @@ public class MainUI : MonoBehaviour
 
         RotationScrollbar?.gameObject.SetActive(isOn);
         ScaleScrollbar?.gameObject.SetActive(isOn);
+        CutScrollbar?.gameObject.SetActive(isOn);
     }
 
     private void OnWidthValueChanged(string width)
@@ -400,6 +410,15 @@ public class MainUI : MonoBehaviour
 
         modifyAnim.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         modifyAnim.Paths = filePaths;
+        modifyAnim.textureMaxSize = ImageMaxSize;
+    }
+
+    private void ImageMaxSize(Vector2 size)
+    {
+        UpdateBtnText updateBtnText = box.GetComponent<UpdateBtnText>();
+        updateBtnText.scale = new Vector3(size.x / 100.0f, size.y / 100.0f, 0); 
+        updateBtnText.text = string.Format("x={0} y={1}", size.x, size.y);
+        box.gameObject.SetActive(true);
     }
 
     private void OnExportClick()
