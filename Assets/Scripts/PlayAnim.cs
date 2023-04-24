@@ -41,6 +41,15 @@ public class PlayAnim : MonoBehaviour
         }
     }
 
+    public int frameCount
+    {
+        get
+        {
+            if (_paths == null) return 0;
+            return _paths.Count;
+        }
+    }
+
     public void SetTexture2D(Texture2D texture2D, bool dispose = true)
     {
         if (!_initTexture2d)

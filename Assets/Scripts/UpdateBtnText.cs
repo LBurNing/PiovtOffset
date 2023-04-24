@@ -33,5 +33,13 @@ public class UpdateBtnText : MonoBehaviour
             if (Go == null) return;
             Go.transform.localScale = value;
         }
+
+        get
+        {
+            if (Go == null) 
+                return Vector3.one;
+
+            return Go.transform.localScale;
+        }
     }
 }

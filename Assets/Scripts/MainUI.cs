@@ -39,6 +39,8 @@ public class MainUI : MonoBehaviour
     private FrameUI templeteFrameUI;
     private IrregularUI irregularUI;
     private List<FrameUI> frameUIs;
+    private UpdateBtnText boxCom;
+    private Vector3 boxDefaultScale;
 
     private Scrollbar ScaleScrollbar;
     private Scrollbar RotationScrollbar;
@@ -91,6 +93,7 @@ public class MainUI : MonoBehaviour
         ScaleScrollbar = transform.Find("Select/ScaleScrollbar").GetComponent<Scrollbar>();
         RotationScrollbar = transform.Find("Select/RotationScrollbar").GetComponent<Scrollbar>();
         CutScrollbar = transform.Find("Select/CutScrollbar").GetComponent<Scrollbar>();
+        boxCom = box.GetComponent<UpdateBtnText>();
 
         exportBtn.onClick.AddListener(OnExportClick);
         templeteBtn.onClick.AddListener(OnTempletePathBtn);
@@ -107,7 +110,7 @@ public class MainUI : MonoBehaviour
         isScale.onValueChanged.AddListener(OnIsScaleValueChanged);
         ScaleScrollbar.onValueChanged.AddListener(OnScaleScrollbar);
         RotationScrollbar.onValueChanged.AddListener(onRotationScrollbar);
-        RotationScrollbar.onValueChanged.AddListener(onCutScrollbar);
+        CutScrollbar.onValueChanged.AddListener(onCutScrollbar);
         horizontal.onClick.AddListener(OnHorizontal);
         vertical.onClick.AddListener(OnVertical);
         alpha.onClick.AddListener(OnAlpha);
@@ -135,7 +138,11 @@ public class MainUI : MonoBehaviour
 
     private void onCutScrollbar(float value)
     {
+        if (boxDefaultScale == Vector3.zero)
+            return;
 
+        Vector3 scale = boxDefaultScale * value;
+        UpdateBoxScale(scale);
     }
 
     private void onRotationScrollbar(float value)
@@ -159,6 +166,7 @@ public class MainUI : MonoBehaviour
     {
         itemBg.gameObject.SetActive(isOn);
         templeteAnim.gameObject.SetActive(!isOn);
+        box.gameObject.SetActive(isOn);
 
         if (!isOn)
         {
@@ -415,10 +423,19 @@ public class MainUI : MonoBehaviour
 
     private void ImageMaxSize(Vector2 size)
     {
-        UpdateBtnText updateBtnText = box.GetComponent<UpdateBtnText>();
-        updateBtnText.scale = new Vector3(size.x / 100.0f, size.y / 100.0f, 0); 
-        updateBtnText.text = string.Format("x={0} y={1}", size.x, size.y);
-        box.gameObject.SetActive(true);
+        CutScrollbar.value = 1;
+        box.gameObject.SetActive(isScale.isOn);
+        UpdateBoxScale(new Vector3(size.x / 100.0f, size.y / 100.0f, 0));
+        boxDefaultScale = boxCom.scale;
+    }
+
+    private void UpdateBoxScale(Vector3 scale)
+    {
+        int width = (int)(scale.x * 100);
+        int height = (int)(scale.y * 100);
+        int size = TextureHelper.GetAtlasSize(width, height, modifyAnim.frameCount);
+        boxCom.scale = new Vector3(scale.x, scale.y, 0);
+        boxCom.text = string.Format("²ÃÇÐ w={0} h={1} c={2} a=<color=#ff0000>{3}</color>", width, height, modifyAnim.frameCount, size);
     }
 
     private void OnExportClick()
@@ -431,6 +448,13 @@ public class MainUI : MonoBehaviour
         string path = modifyPath.text;
         if (curScale != 1 || modifyAnimaOffset != Vector2Int.zero)
             ImageTools.ScaleTexture(path, curScale, modifyAnimaOffset);
+
+        if (isScale.isOn && CutScrollbar.value != 1)
+        {
+            int width = (int)(boxCom.scale.x * 100);
+            int height = (int)(boxCom.scale.y * 100);
+            ImageTools.CutTexture(path, width, height);
+        }
 
         yield return new WaitForSeconds(0.5f);
         ExportComplete();
@@ -472,6 +496,12 @@ public class MainUI : MonoBehaviour
         SetScale(1);
         selectIndex = -1;
         ScaleScrollbar.value = 0.3333f;
+
+        if (boxDefaultScale != Vector3.zero)
+        {
+            CutScrollbar.value = 1;
+            UpdateBoxScale(boxDefaultScale);
+        }
 
         DisposeFrameSprite();
         PlayModifyAnim(modifyPath.text);

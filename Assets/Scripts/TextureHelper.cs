@@ -193,6 +193,48 @@ public class TextureHelper
         }
     }
 
+    public static int GetAtlasSize(int width, int height, int count)
+    {
+        int spacing = 2;
+        int widthCount = GetCount(width + spacing, 128);
+        int heightCount = GetCount(height + spacing, 128);
+        if (widthCount * heightCount > count)
+            return 128;
+
+        widthCount = GetCount(width + spacing, 256);
+        heightCount = GetCount(height + spacing, 256);
+        if (widthCount * heightCount > count)
+            return 256;
+
+        widthCount = GetCount(width + spacing, 512);
+        heightCount = GetCount(height + spacing, 512);
+        if (widthCount * heightCount > count)
+            return 512;
+
+        widthCount = GetCount(width + spacing, 1024);
+        heightCount = GetCount(height + spacing, 1024);
+        if (widthCount * heightCount > count)
+            return 1024;
+
+        widthCount = GetCount(width + spacing, 2048);
+        heightCount = GetCount(height + spacing, 2048);
+        if (widthCount * heightCount > count)
+            return 2048;
+
+        widthCount = GetCount(width + spacing, 4096);
+        heightCount = GetCount(height + spacing, 4096);
+        if (widthCount * heightCount > count)
+            return 4096;
+
+        return 0;
+    }
+
+    public static int GetCount(int size, int maxSize)
+    {
+        if (size >= maxSize) return 1;
+        return (int)(maxSize / size);
+    }
+
     public static Color[] defaultColors
     {
         get

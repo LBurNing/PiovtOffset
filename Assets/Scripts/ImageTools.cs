@@ -54,6 +54,13 @@ public class ImageTools
         pngTexture = null;
     }
 
+    public static void CutTexture(string path, int width, int height)
+    {
+        path = path.Replace(@"\", "//");
+        CmdUtil.ProcessCommand(Global.cutImageToolPath, string.Format("{0} {1} {2} {3}", path, path, width, height));
+    }
+
+
     public static void BlendTexture(string path)
     {
         path = path.Replace(@"\", "//");
