@@ -445,15 +445,38 @@ public class MainUI : MonoBehaviour
 
     private IEnumerator Export(Action<int, int> progressCallBack)
     {
+        //缩放+偏移
         string path = modifyPath.text;
         if (curScale != 1 || modifyAnimaOffset != Vector2Int.zero)
             ImageTools.ScaleTexture(path, curScale, modifyAnimaOffset);
 
+        //裁切
         if (isScale.isOn && CutScrollbar.value != 1)
         {
             int width = (int)(boxCom.scale.x * 100);
             int height = (int)(boxCom.scale.y * 100);
             ImageTools.CutTexture(path, width, height);
+        }
+
+        if (frameUIs.Count > 0)
+        {
+            //不规则偏移
+            int progress = 0;
+            string[] filePaths = Directory.GetFiles(path);
+            int total = filePaths.Length;
+
+            while (progress < total)
+            {
+                if (frameUIs.Count == filePaths.Length)
+                    modifyAnimaOffset = frameUIs[progress].offset;
+
+                string filePath = filePaths[progress];
+                ImageTools.Load(filePath, modifyAnimaOffset);
+
+                progress++;
+                progressCallBack?.Invoke(progress, total);
+                yield return new WaitForSeconds(ExportRes.frameTime);
+            }
         }
 
         yield return new WaitForSeconds(0.5f);
