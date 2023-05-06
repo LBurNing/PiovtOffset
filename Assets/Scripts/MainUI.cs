@@ -391,9 +391,8 @@ public class MainUI : MonoBehaviour
         if (filePaths.Count > 50)
             return;
 
-        if (templeteAnim.IsDispose)
-            modifyAnim.Dispose();
-
+        //if (templeteAnim.IsDispose)
+        templeteAnim.Dispose();
         templeteAnim.Paths = filePaths;
     }
 

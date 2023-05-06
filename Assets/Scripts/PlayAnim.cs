@@ -160,16 +160,18 @@ public class PlayAnim : MonoBehaviour
     {
         if (_sprites != null)
         {
-            foreach (Sprite sp in _sprites)
+            if (!_initTexture2d)
             {
-                Destroy(sp.texture);
+                foreach (Sprite sp in _sprites)
+                {
+                    Destroy(sp.texture);
+                }
+
+                LoadTexture.Dispose(_texture2Ds);
             }
 
             _sprites.Clear();
-
-            LoadTexture.Dispose(_texture2Ds);
             _texture2Ds.Clear();
-
             _paths.Clear();
         }
 
