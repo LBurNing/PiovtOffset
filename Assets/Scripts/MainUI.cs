@@ -388,10 +388,6 @@ public class MainUI : MonoBehaviour
             return;
 
         List<string> filePaths = Utils.GetAllFileList(path, ".png");
-        if (filePaths.Count > 50)
-            return;
-
-        //if (templeteAnim.IsDispose)
         templeteAnim.Dispose();
         templeteAnim.Paths = filePaths;
     }
@@ -409,9 +405,6 @@ public class MainUI : MonoBehaviour
             return;
 
         List<string> filePaths = Utils.GetAllFileList(path, ".png");
-        if (filePaths.Count > 100)
-            return;
-
         if (modifyAnim.IsDispose)
             modifyAnim.Dispose();
 
