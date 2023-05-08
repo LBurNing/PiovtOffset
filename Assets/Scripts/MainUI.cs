@@ -53,6 +53,8 @@ public class MainUI : MonoBehaviour
     private float speed = 0.2f;
     private int playIndex = -1;
     private int selectIndex = -1;
+    private int templeteAnimIndex = 0;
+    private int modifyAnimIndex = 0;
     private float defaultScale = 1;
     private float curScale = 1;
     private bool refactor = true;
@@ -94,6 +96,8 @@ public class MainUI : MonoBehaviour
         RotationScrollbar = transform.Find("Select/RotationScrollbar").GetComponent<Scrollbar>();
         CutScrollbar = transform.Find("Select/CutScrollbar").GetComponent<Scrollbar>();
         boxCom = box.GetComponent<UpdateBtnText>();
+        templeteAnimIndex = templeteAnim.transform.GetSiblingIndex();
+        modifyAnimIndex = modifyAnim.transform.GetSiblingIndex();
 
         exportBtn.onClick.AddListener(OnExportClick);
         templeteBtn.onClick.AddListener(OnTempletePathBtn);
@@ -165,8 +169,16 @@ public class MainUI : MonoBehaviour
     private void OnIsScaleValueChanged(bool isOn)
     {
         itemBg.gameObject.SetActive(isOn);
-        templeteAnim.gameObject.SetActive(!isOn);
         box.gameObject.SetActive(isOn);
+
+        if (string.IsNullOrEmpty(templetePath.text))
+        {
+            templeteAnim.gameObject.SetActive(!isOn);
+        }
+        else
+        {
+            modifyAnim.transform.SetSiblingIndex(isOn ? templeteAnimIndex : modifyAnimIndex);
+        }
 
         if (!isOn)
         {
