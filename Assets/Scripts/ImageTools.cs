@@ -110,6 +110,43 @@ public class ImageTools
         CmdUtil.ProcessCommand(Global.rotationImageToolPath, string.Format("{0} {1} {2}", path, (int)rotationAngle, 0));
     }
 
+    public static void Merge(string path)
+    {
+        byte[] buffer = File.ReadAllBytes(path);
+        Texture2D modify = new Texture2D(1, 1);
+        modify.LoadImage(buffer);
+        modify.Apply();
+        Texture2D templete = Resources.Load<Texture2D>("Merge3");
+
+        int offsetX = (modify.width - templete.width) / 2;
+        int offsetY = (modify.height - templete.height) / 2;
+        for (int i = 0; i < templete.width; i++)
+        {
+            for (int j = 0; j < templete.height; j++)
+            {
+                Color color = templete.GetPixel(i, j);
+                if (color != Color.black && color != Color.clear)
+                {
+                    int tempI = offsetX + i;
+                    int tempJ = offsetY + j;
+                    Color tempColor = modify.GetPixel(tempI, tempJ);
+                    float alpha = 1 - color.r + 0.2f;
+
+                    if (tempColor.a < alpha)
+                        alpha = tempColor.a;
+
+                    modify.SetPixel(tempI, tempJ, new Color(tempColor.r, tempColor.g, tempColor.b, alpha));
+                }
+            }
+
+            modify.Apply();
+            Utils.SavePng(path, modify);
+        }
+
+        GameObject.DestroyImmediate(modify, true);
+        modify = null;
+    }
+
     // 缩放纹理的方法
     /// <summary>
     /// 缩放Textur2D

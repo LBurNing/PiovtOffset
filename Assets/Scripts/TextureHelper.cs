@@ -27,6 +27,7 @@ public class TextureHelper
         int height = texture.height;
         Color32[] pixels = texture.GetPixels32();
 
+
         // Split the pixels into multiple tasks
         int numPixelsPerTask = (height + numThreads - 1) / numThreads;
         List<ThreadData> threadDataList = new List<ThreadData>();

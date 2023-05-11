@@ -23,6 +23,7 @@ public class LoadTexture
             string filePath = filePaths[i];
             byte[] buffer = File.ReadAllBytes(filePath);
             Texture2D t2D = new Texture2D(1, 1);
+            t2D.name = Path.GetFileName(filePath);
             t2D.LoadImage(buffer);
             t2D.Apply();
 

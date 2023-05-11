@@ -83,7 +83,7 @@ public class PlayAnim : MonoBehaviour
         if (_image == null)
             return;
 
-        _maxFrame = _paths.Count;
+        _maxFrame = _paths.Count == 0 ? _sprites.Count : _paths.Count;
         if (_maxFrame == 0)
             return;
 

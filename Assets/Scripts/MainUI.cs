@@ -18,6 +18,7 @@ public class MainUI : MonoBehaviour
     private Button horizontal;
     private Button vertical;
     private Button alpha;
+    private Button merge;
     private Toggle playFrame;
     private Toggle IrregularToggle;
     private Toggle isScale;
@@ -76,6 +77,7 @@ public class MainUI : MonoBehaviour
         horizontal = transform.Find("Select/Horizontal").GetComponent<Button>();
         alpha = transform.Find("Select/Alpha").GetComponent<Button>();
         vertical = transform.Find("Select/Vertical").GetComponent<Button>();
+        merge = transform.Find("Select/Merge").GetComponent<Button>();
 
         scaleWidth = transform.Find("Select/ScaleWidth").GetComponent<InputField>();
         scaleHeight = transform.Find("Select/ScaleHeight").GetComponent<InputField>();
@@ -118,6 +120,7 @@ public class MainUI : MonoBehaviour
         horizontal.onClick.AddListener(OnHorizontal);
         vertical.onClick.AddListener(OnVertical);
         alpha.onClick.AddListener(OnAlpha);
+        merge.onClick.AddListener(OnMerge);
         irregularUI.MainUI = this;
 
         scaleWidth.text = itemBg.sizeDelta.x.ToString();
@@ -127,6 +130,32 @@ public class MainUI : MonoBehaviour
     private void OnAlpha()
     {
         ImageTools.BlendTexture(modifyPath.text);
+        PlayModifyAnim(modifyPath.text);
+    }
+
+    private void OnMerge()
+    {
+        StartCoroutine(Merge(ShowProgress));
+    }
+
+    private IEnumerator Merge(Action<int, int> progressCallBack)
+    {
+        string path = modifyPath.text;
+        int progress = 0;
+        string[] filePaths = Directory.GetFiles(path);
+        int total = filePaths.Length;
+
+        while (progress < total)
+        {
+            string filePath = filePaths[progress];
+            ImageTools.Merge(filePath);
+
+            progress++;
+            progressCallBack?.Invoke(progress, total);
+            yield return new WaitForSeconds(ExportRes.frameTime);
+        }
+
+        yield return new WaitForSeconds(0.5f);
         PlayModifyAnim(modifyPath.text);
     }
 
@@ -191,6 +220,7 @@ public class MainUI : MonoBehaviour
         RotationScrollbar?.gameObject.SetActive(isOn);
         ScaleScrollbar?.gameObject.SetActive(isOn);
         CutScrollbar?.gameObject.SetActive(isOn);
+        templeteAnim.transform.Find("Line").gameObject.SetActive(!isOn);
     }
 
     private void OnWidthValueChanged(string width)
