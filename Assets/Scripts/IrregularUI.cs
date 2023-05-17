@@ -44,6 +44,7 @@ public class IrregularUI : MonoBehaviour
     private void OnComoplete(int index)
     {
         exportIndex = index;
+        refactor = true;
     }
 
     private void OnAddFrame()

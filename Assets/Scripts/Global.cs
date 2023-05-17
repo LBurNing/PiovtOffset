@@ -5,8 +5,8 @@ using UnityEngine;
 public class Global
 {
     public static List<Color> defaultColors = new List<Color>();
-    public static int maxWidth = 2048;
-    public static int maxHeight = 2048;
+    public static int maxWidth = 4096;
+    public static int maxHeight = 4096;
 
     public static string root = Application.dataPath;
 #if UNITY_EDITOR
