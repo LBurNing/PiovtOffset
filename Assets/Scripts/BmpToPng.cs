@@ -52,8 +52,8 @@ public class BmpToPng
         int offsetx = -25 + bmpData.pivot.x;
         int offsety = 19 + bmpData.pivot.y;
 
-        int width = t2D.width * 2 + Math.Abs(offset.x) + Math.Abs(offsetx) + 30;
-        int height = t2D.height * 2 + Math.Abs(offset.y) + Math.Abs(offsety) + 30;
+        int width = t2D.width * 2 + Math.Abs(offset.x) + Math.Abs(offsetx) + 100;
+        int height = t2D.height * 2 + Math.Abs(offset.y) + Math.Abs(offsety) + 100;
         #endregion
 
         #region 起始点计算

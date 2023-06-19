@@ -251,7 +251,8 @@ public class ExportRes
             foreach (var value in playerFrames)
             {
                 string actionName = eToc[value.Key];
-                string outPngParentPath = resData.resPath + "/../修正后的PNG资源/" + Path.GetFileName(resData.resPath) + "/" + genderFileName + @"\" + actionName + @"\";
+                int index = gender ? femaleRedId : maleResId;
+                string outPngParentPath = resData.resPath + "/../修正后的PNG资源/" + Path.GetFileName(resData.resPath) + "/" + genderFileName + @"\" + index + @"\" + actionName + @"\";
 
                 if (!Directory.Exists(outPngParentPath))
                     Directory.CreateDirectory(outPngParentPath);
@@ -319,6 +320,7 @@ public class ExportRes
             }
 
             startFrameIndex += resMaxFrame;
+            end = startFrameIndex >= maxCount;
         }
 
         progress?.Invoke(maxCount, maxCount);
