@@ -67,6 +67,12 @@ public class ImageTools
         CmdUtil.ProcessCommand(Global.blendImageToolPath, string.Format("{0} {1}", path, path));
     }
 
+    public static void Bmp2Png(string path)
+    {
+        path = path.Replace(@"\", "//");
+        CmdUtil.ProcessCommand(Global.bmp2pngPath, string.Format("{0}\\ {1}\\", path, path));
+    }
+
     public static void ScaleTexture(string path, float proportion, Vector2Int offset)
     {
         path = path.Replace(@"\", "//");

@@ -18,6 +18,7 @@ public class MainUI : MonoBehaviour
     private Button horizontal;
     private Button vertical;
     private Button alpha;
+    private Button bmp2Png;
     private Button merge;
     private Toggle playFrame;
     private Toggle IrregularToggle;
@@ -76,6 +77,7 @@ public class MainUI : MonoBehaviour
         isScale = transform.Find("Select/IsScale").GetComponent<Toggle>();
         horizontal = transform.Find("Select/Horizontal").GetComponent<Button>();
         alpha = transform.Find("Select/Alpha").GetComponent<Button>();
+        bmp2Png = transform.Find("Select/Bmp2Png").GetComponent<Button>();
         vertical = transform.Find("Select/Vertical").GetComponent<Button>();
         merge = transform.Find("Select/Merge").GetComponent<Button>();
 
@@ -120,6 +122,7 @@ public class MainUI : MonoBehaviour
         horizontal.onClick.AddListener(OnHorizontal);
         vertical.onClick.AddListener(OnVertical);
         alpha.onClick.AddListener(OnAlpha);
+        bmp2Png.onClick.AddListener(OnBmp2Png);
         merge.onClick.AddListener(OnMerge);
         irregularUI.MainUI = this;
 
@@ -127,10 +130,14 @@ public class MainUI : MonoBehaviour
         scaleHeight.text = itemBg.sizeDelta.y.ToString();
     }
 
+    private void OnBmp2Png()
+    {
+        ImageTools.Bmp2Png(modifyPath.text);
+    }
+
     private void OnAlpha()
     {
         ImageTools.BlendTexture(modifyPath.text);
-        PlayModifyAnim(modifyPath.text);
     }
 
     private void OnMerge()

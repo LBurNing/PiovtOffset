@@ -14,11 +14,13 @@ public class Global
     public static string scaleImageToolPath = root + "/../Tools/Scale.exe";
     public static string blendImageToolPath = root + "/../Tools/Blend.exe";
     public static string cutImageToolPath = root + "/../Tools/Cut.exe";
+    public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
 #elif UNITY_STANDALONE
     public static string rotationImageToolPath = root + "/../Tools/Rotate.exe";
     public static string scaleImageToolPath = root + "/../Tools/Scale.exe";
     public static string blendImageToolPath = root + "/../Tools/Blend.exe";
     public static string cutImageToolPath = root + "/../Tools/Cut.exe";
+    public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
 #endif
 
     public static void InitTransparentColor()
