@@ -8,6 +8,8 @@ public class IrregularUI : MonoBehaviour
 {
     private Button exportBtn;
     private Button addFrameBtn;
+    private Button descBtn;
+    private GameObject desc;
     private GameObject content;
     private GameObject templete;
     private Coroutine exportCoroutine;
@@ -19,17 +21,25 @@ public class IrregularUI : MonoBehaviour
     {
         exportBtn = transform.Find("IrregularExportBtn").GetComponent<Button>();
         addFrameBtn = transform.Find("AddFrameBtn").GetComponent<Button>();
+        desc = transform.Find("Desc").gameObject;
+        descBtn = transform.Find("DescBtn").GetComponent<Button>();
+
         templete = transform.Find("Frame").gameObject;
         content = transform.Find("ScrollView/Viewport/Content").gameObject;
         exportBtn.onClick.AddListener(OnExport);
         addFrameBtn.onClick.AddListener(OnAddFrame);
+        descBtn.onClick.AddListener(OnDesc);
+    }
+
+    private void OnDesc()
+    {
+        desc.SetActive(!desc.activeSelf);
     }
 
     private void OnExport()
     {
         if (refactor)
         {
-            ExportRes.Rename(mainUI.ModifyPath);
             exportCoroutine = StartCoroutine(ExportRes.ExportCustom(mainUI.ModifyPath, FrameSet, exportIndex, mainUI.ShowProgress, OnComoplete));
         }
         else
@@ -37,14 +47,16 @@ public class IrregularUI : MonoBehaviour
             StopCoroutine(exportCoroutine);
         }
 
-        exportBtn.GetComponent<UpdateBtnText>().text = refactor ? "不规则重构" : "暂停";
         refactor = !refactor;
+        exportBtn.GetComponent<UpdateBtnText>().text = refactor ? "不规则重构" : "暂停";
     }
 
     private void OnComoplete(int index)
     {
         exportIndex = index;
         refactor = true;
+        exportBtn.GetComponent<UpdateBtnText>().text = refactor ? "不规则重构" : "暂停";
+        mainUI.ShowProgress(0, 0);
     }
 
     private void OnAddFrame()
@@ -68,10 +80,10 @@ public class IrregularUI : MonoBehaviour
         get
         {
             FrameSet frame = new FrameSet();
-            for (int i=0;i< content.transform.childCount; i++)
+            for (int i = 0; i < content.transform.childCount; i++)
             {
                 CreateFrameUI frameUI = content.transform.GetChild(i).GetComponent<CreateFrameUI>();
-                frame.Frames.Add(frameUI.mirAction, frameUI.Frame);
+                frame.Name2Frames.Add(frameUI.Name, frameUI.Frame);
             }
 
             return frame;

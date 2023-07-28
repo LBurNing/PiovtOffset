@@ -12,6 +12,7 @@ public class FrameSet
     public int startFrameIndex = -1;
     public int resMaxFrame;
     public Dictionary<MirAction, Frame> Frames = new Dictionary<MirAction, Frame>();
+    public Dictionary<string, Frame> Name2Frames = new Dictionary<string, Frame>();
     public List<Frame> EffectFrames = new List<Frame>();
 
     static FrameSet()
@@ -52,7 +53,8 @@ public class FrameSet
 
 public class Frame
 {
-    public int Start, Count, Skip, MaxCount;
+    public int Start, Count, Skip, MaxCount, Dir;
+    public string Name;
     public bool Alpha = false;
     public bool EffectAlpha = false;
     public MirDirection direction;

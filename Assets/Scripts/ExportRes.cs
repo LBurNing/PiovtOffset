@@ -75,8 +75,11 @@ public class ExportRes
 
     public static IEnumerator ExportCustom(string sourcePath, FrameSet frameSet, int index = 0, Action<int, int> progress = null, Action<int> complete = null)
     {
+        yield return new WaitForSeconds(0.2f);
+        Rename(sourcePath);
+
         int resIndex = 0;
-        Dictionary<MirAction, Frame> frames = frameSet.Frames;
+        Dictionary<string, Frame> frames = frameSet.Name2Frames;
         float alphaSize = 0.9f;
         float addColor = 10;
 
@@ -85,7 +88,7 @@ public class ExportRes
 
         foreach (var value in frames)
         {
-            string actionName = eToc[value.Key];
+            string actionName = value.Key;
             string outPngParentPath = sourcePath + "/../修正后的PNG资源/" + Path.GetFileName(sourcePath) + "/" + index + @"\" + actionName + @"\";
 
             if (!Directory.Exists(outPngParentPath))
@@ -95,7 +98,7 @@ public class ExportRes
             Frame frame = value.Value;
             for (byte Direction = (byte)MirDirection.Up; Direction <= (byte)frame.direction; Direction++)
             {
-                int actionIndex = 10000 * (Direction + 1);
+                int actionIndex = 10000 * (Direction + frame.Dir);
                 for (int FrameIndex = 0; FrameIndex < frame.Count; FrameIndex++)
                 {
                     resIndex++;
@@ -138,7 +141,7 @@ public class ExportRes
         }
 
         progress?.Invoke(maxCount, maxCount);
-        complete?.Invoke(index++);
+        complete?.Invoke(++index);
         yield return null;
     }
 

@@ -10,6 +10,8 @@ public class CreateFrameUI : MonoBehaviour
     private InputField _count;
     private InputField _skip;
     private InputField _maxCount;
+    private InputField _name;
+    private InputField _dir;
     private Dropdown _dropdown;
     private Button _delete;
     private MirAction _mirAction = MirAction.Node;
@@ -21,6 +23,8 @@ public class CreateFrameUI : MonoBehaviour
         _count = transform.Find("Count").GetComponent<InputField>();
         _skip = transform.Find("Skip").GetComponent<InputField>();
         _maxCount = transform.Find("MaxCount").GetComponent<InputField>();
+        _name = transform.Find("Name").GetComponent<InputField>();
+        _dir = transform.Find("Dir").GetComponent<InputField>();
         _dropdown = transform.Find("Dropdown").GetComponent<Dropdown>();
         _delete = transform.Find("Delete").GetComponent<Button>();
 
@@ -62,6 +66,18 @@ public class CreateFrameUI : MonoBehaviour
         } 
     }
 
+    public string Name
+    {
+        get
+        {
+            return _name.text;
+        }
+        set
+        {
+            _name.text = value;
+        }
+    }
+
     public Frame Frame
     {
         get
@@ -70,6 +86,8 @@ public class CreateFrameUI : MonoBehaviour
             int count = 0;
             int skip = 0;
             int maxCount = 0;
+            int dir = 0;
+            string Name = "δ֪";
 
             if(!string.IsNullOrEmpty(_startPos.text))
                 start = int.Parse(_startPos.text);
@@ -83,7 +101,18 @@ public class CreateFrameUI : MonoBehaviour
             if (!string.IsNullOrEmpty(_maxCount.text))
                 maxCount = int.Parse(_maxCount.text);
 
+            if (!string.IsNullOrEmpty(_name.text))
+                Name = _name.text;
+
+            if (!string.IsNullOrEmpty(_dir.text))
+            {
+                dir = int.Parse(_dir.text);
+                dir = dir == 0 ? 1 : dir;
+            }
+
             Frame frame = new Frame(start, count, skip, maxCount);
+            frame.Dir = dir;
+            frame.Name = Name;
             return frame;
         }
     }
