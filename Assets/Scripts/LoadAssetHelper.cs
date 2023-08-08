@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 
-public class LoadTexture
+public class LoadAssetHelper
 {
     public static List<string> GetFilePaths(string path)
     {
@@ -54,5 +54,10 @@ public class LoadTexture
         }
 
         texture2Ds.Clear();
+    }
+
+    public static GameObject LoadResourcesUI(string path)
+    {
+        return Resources.Load<GameObject>(path);
     }
 }

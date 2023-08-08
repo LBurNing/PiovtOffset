@@ -49,7 +49,7 @@
     End,
 }
 
-public enum MirDirection : byte
+public enum EnumDirection : byte
 {
     Up = 0,
     UpRight = 1,
@@ -58,5 +58,6 @@ public enum MirDirection : byte
     Down = 4,
     DownLeft = 5,
     Left = 6,
-    UpLeft = 7
+    UpLeft = 7,
+    None = 8,
 }

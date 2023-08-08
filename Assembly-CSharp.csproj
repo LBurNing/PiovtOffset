@@ -61,7 +61,8 @@
     <Compile Include="Assets\Scripts\CutTexture.cs" />
     <Compile Include="Assets\Scripts\TextureHelper.cs" />
     <Compile Include="Assets\Scripts\DialogOperate.cs" />
-    <Compile Include="Assets\Scripts\LoadTexture.cs" />
+    <Compile Include="Assets\Scripts\LoadAssetHelper.cs" />
+    <Compile Include="Assets\Scripts\NoticeUI.cs" />
     <Compile Include="Assets\Scripts\PlayAnim.cs" />
     <Compile Include="Assets\Scripts\DragHandle.cs" />
     <Compile Include="Assets\Scripts\IrregularUI.cs" />
@@ -69,6 +70,7 @@
     <Compile Include="Assets\Scripts\Common.cs" />
     <Compile Include="Assets\Scripts\FrameUI.cs" />
     <Compile Include="Assets\Scripts\ExportRes.cs" />
+    <Compile Include="Assets\Scripts\NoticeItem.cs" />
     <Compile Include="Assets\Scripts\MainUI.cs" />
     <Compile Include="Assets\Scripts\ImageTools.cs" />
     <Compile Include="Assets\Scripts\CreateFrameUI.cs" />
@@ -76,6 +78,9 @@
     <Compile Include="Assets\Scripts\Frames.cs" />
     <Compile Include="Assets\Scripts\Utils.cs" />
     <Compile Include="Assets\Scripts\CmdUtil.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Assets\TextureExt.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

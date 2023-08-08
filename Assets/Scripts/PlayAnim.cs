@@ -100,7 +100,7 @@ public class PlayAnim : MonoBehaviour
 
             if (_sprites.Count == _index)
             {
-                Texture2D texture2D = LoadTexture.LoadTex(_paths[_index]);
+                Texture2D texture2D = LoadAssetHelper.LoadTex(_paths[_index]);
                 SetTexture2D(texture2D);
             }
 
@@ -119,6 +119,14 @@ public class PlayAnim : MonoBehaviour
                 _textureMaxSize.Invoke(_maxSize);
                 _textureMaxSize = null;
             }
+        }
+    }
+
+    public int layer
+    {
+        set
+        {
+            GetComponent<Canvas>().sortingOrder = value;
         }
     }
 
@@ -167,7 +175,7 @@ public class PlayAnim : MonoBehaviour
                     Destroy(sp.texture);
                 }
 
-                LoadTexture.Dispose(_texture2Ds);
+                LoadAssetHelper.Dispose(_texture2Ds);
             }
 
             _sprites.Clear();

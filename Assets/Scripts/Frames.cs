@@ -47,7 +47,7 @@ public class FrameSet
         Wings.resMaxFrame = Wings.Frames[MirAction.Die].FrameIndex;
         #endregion
 
-        NeiGuan.Frames.Add(MirAction.NeiGuan, new Frame(0, 60, 0, 60, false, false, MirDirection.UpRight));
+        NeiGuan.Frames.Add(MirAction.NeiGuan, new Frame(0, 60, 0, 60, false, false, EnumDirection.UpRight));
     }
 }
 
@@ -57,7 +57,7 @@ public class Frame
     public string Name;
     public bool Alpha = false;
     public bool EffectAlpha = false;
-    public MirDirection direction;
+    public EnumDirection direction;
 
     public int OffSet
     {
@@ -69,7 +69,7 @@ public class Frame
         get { return Start + MaxCount; }
     }
 
-    public Frame(int start, int count, int skip, int maxCount, bool alpha = false, bool effectAlpha = false, MirDirection mirDirection = MirDirection.UpLeft)
+    public Frame(int start, int count, int skip, int maxCount, bool alpha = false, bool effectAlpha = false, EnumDirection mirDirection = EnumDirection.UpLeft)
     {
         Start = start;
         Count = count;

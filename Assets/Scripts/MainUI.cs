@@ -6,11 +6,16 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
+public enum EnumAnimLayer
+{
+    Modify = 1,
+    Templete = 3,
+}
+
 public class MainUI : MonoBehaviour
 {
+    #region Button
     private Button exportBtn;
-    private Button templeteBtn;
-    private Button modifyBtn;
     private Button playTempleteBtn;
     private Button playModifyBtn;
     private Button refactorBtn;
@@ -20,34 +25,59 @@ public class MainUI : MonoBehaviour
     private Button alpha;
     private Button bmp2Png;
     private Button merge;
+    #endregion
+
+    #region Toggle
     private Toggle playFrame;
     private Toggle IrregularToggle;
     private Toggle isScale;
+    #endregion
 
+    #region InputField
     private InputField offsetX;
     private InputField offsetY;
     private InputField templetePath;
     private InputField modifyPath;
     private InputField scaleWidth;
     private InputField scaleHeight;
+    #endregion
+
+    #region Text
     private Text progressText;
+    #endregion
+
+    #region Script
     private PlayAnim templeteAnim;
     private PlayAnim modifyAnim;
-    private Image progressImage;
-    private RectTransform sprites;
-    private RectTransform frames;
-    private RectTransform itemBg;
-    private RectTransform box;
     private FrameUI templeteFrameUI;
     private IrregularUI irregularUI;
     private List<FrameUI> frameUIs;
     private UpdateBtnText boxCom;
-    private Vector3 boxDefaultScale;
+    #endregion
 
-    private Scrollbar ScaleScrollbar;
-    private Scrollbar RotationScrollbar;
-    private Scrollbar CutScrollbar;
+    #region Image
+    private Image progressImage;
+    #endregion
+
+    #region RectTransform
+    private RectTransform sprites;
+    private RectTransform frames;
+    private RectTransform itemBg;
+    private RectTransform box;
+    #endregion
+
+    #region Scrollbar
+    private Scrollbar scaleScrollbar;
+    private Scrollbar rotationScrollbar;
+    private Scrollbar cutScrollbar;
+    #endregion
+
+    #region Dropdown
     private Dropdown dropdown;
+    private Dropdown dirDropdown;
+    #endregion
+
+    private Vector3 boxDefaultScale;
     private Action<float> progressCallBack;
     private Coroutine exportCoroutine;
 
@@ -60,52 +90,90 @@ public class MainUI : MonoBehaviour
     private float defaultScale = 1;
     private float curScale = 1;
     private bool refactor = true;
+
     private EnumResType exportType = EnumResType.NeiGuan;
+    private EnumDirection animDir = EnumDirection.None;
 
     void Start()
     {
         frameUIs = new List<FrameUI>();
+
+        #region Button
         exportBtn = transform.Find("ExportBtn").GetComponent<Button>();
-        templeteBtn = transform.Find("Select/TempleteBtn").GetComponent<Button>();
         playTempleteBtn = transform.Find("Select/PlayTemplete").GetComponent<Button>();
         playModifyBtn = transform.Find("Select/PlayModify").GetComponent<Button>();
-        modifyBtn = transform.Find("Select/ModifyBtn").GetComponent<Button>();
         expandAnimation = transform.Find("Select/ExpandAnimation").GetComponent<Button>();
         refactorBtn = transform.Find("RefactorBtn").GetComponent<Button>();
-        playFrame = transform.Find("PlayFrame").GetComponent<Toggle>();
-        IrregularToggle = transform.Find("IrregularToggle").GetComponent<Toggle>();
-        isScale = transform.Find("Select/IsScale").GetComponent<Toggle>();
         horizontal = transform.Find("Select/Horizontal").GetComponent<Button>();
         alpha = transform.Find("Select/Alpha").GetComponent<Button>();
         bmp2Png = transform.Find("Select/Bmp2Png").GetComponent<Button>();
         vertical = transform.Find("Select/Vertical").GetComponent<Button>();
         merge = transform.Find("Select/Merge").GetComponent<Button>();
+        #endregion
 
+        #region Toggle
+        playFrame = transform.Find("PlayFrame").GetComponent<Toggle>();
+        IrregularToggle = transform.Find("IrregularToggle").GetComponent<Toggle>();
+        isScale = transform.Find("Select/IsScale").GetComponent<Toggle>();
+        #endregion
+
+        #region InputField
         scaleWidth = transform.Find("Select/ScaleWidth").GetComponent<InputField>();
         scaleHeight = transform.Find("Select/ScaleHeight").GetComponent<InputField>();
         templetePath = transform.Find("Select/TempletePath").GetComponent<InputField>();
         modifyPath = transform.Find("Select/ModifyPath").GetComponent<InputField>();
-        progressText = transform.Find("ProgressBg/ProgressText").GetComponent<Text>();
-        progressImage = transform.Find("ProgressBg/Progress").GetComponent<Image>();
-        templeteAnim = transform.Find("TempleteAnim").GetComponent<PlayAnim>();
-        modifyAnim = transform.Find("ModifyAnim").GetComponent<PlayAnim>();
+        #endregion
+
+        #region Scrollbar
+        scaleScrollbar = transform.Find("Select/ScaleScrollbar").GetComponent<Scrollbar>();
+        rotationScrollbar = transform.Find("Select/RotationScrollbar").GetComponent<Scrollbar>();
+        cutScrollbar = transform.Find("Select/CutScrollbar").GetComponent<Scrollbar>();
+        #endregion
+
+        #region RectTransform
         sprites = transform.Find("Sprites").GetComponent<RectTransform>();
         frames = transform.Find("Frames").GetComponent<RectTransform>();
         itemBg = transform.Find("ItemBg").GetComponent<RectTransform>();
         box = transform.Find("Box").GetComponent<RectTransform>();
+        #endregion
+
+        #region Script
+        templeteAnim = transform.Find("TempleteAnim").GetComponent<PlayAnim>();
+        modifyAnim = transform.Find("ModifyAnim").GetComponent<PlayAnim>();
         templeteFrameUI = transform.Find("Templete").GetComponent<FrameUI>();
         irregularUI = transform.Find("Irregular").GetComponent<IrregularUI>();
-        dropdown = transform.Find("RefactorType/Dropdown").GetComponent<Dropdown>();
-        ScaleScrollbar = transform.Find("Select/ScaleScrollbar").GetComponent<Scrollbar>();
-        RotationScrollbar = transform.Find("Select/RotationScrollbar").GetComponent<Scrollbar>();
-        CutScrollbar = transform.Find("Select/CutScrollbar").GetComponent<Scrollbar>();
         boxCom = box.GetComponent<UpdateBtnText>();
+        #endregion
+
+        #region Text
+        progressText = transform.Find("ProgressBg/ProgressText").GetComponent<Text>();
+        #endregion
+
+        #region Image
+        progressImage = transform.Find("ProgressBg/Progress").GetComponent<Image>();
+        #endregion
+
+        #region DropDown
+        dropdown = transform.Find("RefactorType/Dropdown").GetComponent<Dropdown>();
+        dirDropdown = transform.Find("Select/DirDropdown").GetComponent<Dropdown>();
+        #endregion
+
+        #region 默认值
         templeteAnimIndex = templeteAnim.transform.GetSiblingIndex();
         modifyAnimIndex = modifyAnim.transform.GetSiblingIndex();
+        dirDropdown.value = (int)EnumDirection.None;
+        scaleWidth.text = itemBg.sizeDelta.x.ToString();
+        scaleHeight.text = itemBg.sizeDelta.y.ToString();
+        irregularUI.MainUI = this;
+        #endregion
 
+        AddEvent();
+    }
+
+    private void AddEvent()
+    {
+        dirDropdown.onValueChanged.AddListener(OnDirClick);
         exportBtn.onClick.AddListener(OnExportClick);
-        templeteBtn.onClick.AddListener(OnTempletePathBtn);
-        modifyBtn.onClick.AddListener(OnModifyPathBtn);
         playTempleteBtn.onClick.AddListener(OnPlayTempleteBtn);
         playModifyBtn.onClick.AddListener(OnPlayModifyBtn);
         refactorBtn.onClick.AddListener(OnRefactorBtn);
@@ -116,18 +184,14 @@ public class MainUI : MonoBehaviour
         scaleWidth.onValueChanged.AddListener(OnWidthValueChanged);
         scaleHeight.onValueChanged.AddListener(OnHeightValueChanged);
         isScale.onValueChanged.AddListener(OnIsScaleValueChanged);
-        ScaleScrollbar.onValueChanged.AddListener(OnScaleScrollbar);
-        RotationScrollbar.onValueChanged.AddListener(onRotationScrollbar);
-        CutScrollbar.onValueChanged.AddListener(onCutScrollbar);
+        scaleScrollbar.onValueChanged.AddListener(OnScaleScrollbar);
+        rotationScrollbar.onValueChanged.AddListener(onRotationScrollbar);
+        cutScrollbar.onValueChanged.AddListener(onCutScrollbar);
         horizontal.onClick.AddListener(OnHorizontal);
         vertical.onClick.AddListener(OnVertical);
         alpha.onClick.AddListener(OnAlpha);
         bmp2Png.onClick.AddListener(OnBmp2Png);
         merge.onClick.AddListener(OnMerge);
-        irregularUI.MainUI = this;
-
-        scaleWidth.text = itemBg.sizeDelta.x.ToString();
-        scaleHeight.text = itemBg.sizeDelta.y.ToString();
     }
 
     private void OnBmp2Png()
@@ -220,13 +284,13 @@ public class MainUI : MonoBehaviour
         {
             SetScale(1);
             SetRotation(0);
-            RotationScrollbar.value = 0;
-            ScaleScrollbar.value = 0.3333f;
+            rotationScrollbar.value = 0;
+            scaleScrollbar.value = 0.3333f;
         }
 
-        RotationScrollbar?.gameObject.SetActive(isOn);
-        ScaleScrollbar?.gameObject.SetActive(isOn);
-        CutScrollbar?.gameObject.SetActive(isOn);
+        rotationScrollbar?.gameObject.SetActive(isOn);
+        scaleScrollbar?.gameObject.SetActive(isOn);
+        cutScrollbar?.gameObject.SetActive(isOn);
         templeteAnim.transform.Find("Line").gameObject.SetActive(!isOn);
     }
 
@@ -334,6 +398,27 @@ public class MainUI : MonoBehaviour
         }
     }
 
+    private void OnDirClick(int value)
+    {
+        animDir = (EnumDirection)value;
+        if (animDir == EnumDirection.UpRight || animDir == EnumDirection.Right || animDir == EnumDirection.DownRight)
+        {
+            modifyAnim.layer = (int)EnumAnimLayer.Templete;
+            templeteAnim.layer = (int)EnumAnimLayer.Modify;
+        }
+        else
+        {
+            modifyAnim.layer = (int)EnumAnimLayer.Modify;
+            templeteAnim.layer = (int)EnumAnimLayer.Templete;
+        }
+
+        if (animDir != EnumDirection.None)
+        {
+            PlayModifyAnim(modifyPath.text);
+            PlayTempleteAnim(templetePath.text);
+        }
+    }
+
     private void OnFrameSpriteBtn()
     {
         List<string> filePaths = Utils.GetAllFileList(modifyPath.text, ".png");
@@ -341,7 +426,7 @@ public class MainUI : MonoBehaviour
             return;
 
         DisposeFrameSprite();
-        List<Texture2D> texture2Ds = LoadTexture.Load(modifyPath.text);
+        List<Texture2D> texture2Ds = LoadAssetHelper.Load(modifyPath.text);
         for (int i = 0; i < texture2Ds.Count; i++)
         {
             GameObject frameSpriteGo = new GameObject(i.ToString());
@@ -381,7 +466,7 @@ public class MainUI : MonoBehaviour
             ExportRes.Rename(modifyPath.text);
             if (exportType == EnumResType.NeiGuan)
             {
-                exportCoroutine = StartCoroutine(ExportRes.Export(modifyPath.text, Vector2Int.zero, 10000 * (int)MirDirection.Down, ShowProgress));
+                exportCoroutine = StartCoroutine(ExportRes.Export(modifyPath.text, Vector2Int.zero, 10000 * (int)EnumDirection.Down, ShowProgress));
                 modifyPath.text = modifyPath.text + @"\待机\";
             }
             else
@@ -421,14 +506,8 @@ public class MainUI : MonoBehaviour
 
     private void OnPlayModifyBtn()
     {
+        dirDropdown.value = (int)EnumDirection.None;
         PlayModifyAnim(modifyPath.text);
-    }
-
-    private void OnTempletePathBtn()
-    {
-        string path = DialogOperate.OpenFolder();
-        templetePath.text = path;
-        PlayTempleteAnim(path);
     }
 
     private void PlayTempleteAnim(string path)
@@ -436,16 +515,19 @@ public class MainUI : MonoBehaviour
         if (string.IsNullOrEmpty(path))
             return;
 
-        List<string> filePaths = Utils.GetAllFileList(path, ".png");
+        int dir = (int)EnumDirection.Down + 1;
+        if (animDir != EnumDirection.None)
+            dir = (int)animDir + 1;
+
+        List<string> filePaths = Utils.GetAllFileList(path, ".png", dir.ToString());
+        if (filePaths.Count == 0)
+        {
+            filePaths = Utils.GetAllFileList(path, ".png");
+            Notice.ShowNotice(string.Format("没有找到{0}方向上的资源, 默认播放文件夹下的所有图片", dir.ToString()), Color.red, 3);
+        }
+
         templeteAnim.Dispose();
         templeteAnim.Paths = filePaths;
-    }
-
-    private void OnModifyPathBtn()
-    {
-        string path = DialogOperate.OpenFolder();
-        modifyPath.text = path;
-        PlayModifyAnim(path);
     }
 
     private void PlayModifyAnim(string path)
@@ -453,9 +535,19 @@ public class MainUI : MonoBehaviour
         if (string.IsNullOrEmpty(path))
             return;
 
-        List<string> filePaths = Utils.GetAllFileList(path, ".png");
+        int dir = (int)EnumDirection.Down + 1;
+        if (animDir != EnumDirection.None)
+            dir = (int)animDir + 1;
+
+        List<string> filePaths = Utils.GetAllFileList(path, ".png", dir.ToString());
         if (modifyAnim.IsDispose)
             modifyAnim.Dispose();
+
+        if (filePaths.Count == 0)
+        {
+            filePaths = Utils.GetAllFileList(path, ".png");
+            Notice.ShowNotice(string.Format("没有找到{0}方向上的资源, 默认播放文件夹下的所有图片", dir.ToString()), Color.red, 3);
+        }
 
         modifyAnim.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
         modifyAnim.Paths = filePaths;
@@ -464,7 +556,7 @@ public class MainUI : MonoBehaviour
 
     private void ImageMaxSize(Vector2 size)
     {
-        CutScrollbar.value = 1;
+        cutScrollbar.value = 1;
         box.gameObject.SetActive(isScale.isOn);
         UpdateBoxScale(new Vector3(size.x / 100.0f, size.y / 100.0f, 0));
         boxDefaultScale = boxCom.scale;
@@ -489,10 +581,10 @@ public class MainUI : MonoBehaviour
         //缩放+偏移
         string path = modifyPath.text;
         if (curScale != 1 || modifyAnimaOffset != Vector2Int.zero)
-            ImageTools.ScaleTexture(path, curScale, modifyAnimaOffset);
+            ImageTools.ScaleTexture(path, curScale, modifyAnimaOffset, (int)animDir + 1);
 
         //裁切
-        if (isScale.isOn && CutScrollbar.value != 1)
+        if (isScale.isOn && cutScrollbar.value != 1)
         {
             int width = (int)(boxCom.scale.x * 100);
             int height = (int)(boxCom.scale.y * 100);
@@ -544,7 +636,7 @@ public class MainUI : MonoBehaviour
         {
             ImageTools.Rotate(modifyPath.text, modifyAnim.transform.localRotation.eulerAngles.z);
             SetRotation(0);
-            RotationScrollbar.value = 0;
+            rotationScrollbar.value = 0;
         }
 
         if (modifyAnim.horMirror)
@@ -559,11 +651,11 @@ public class MainUI : MonoBehaviour
 
         SetScale(1);
         selectIndex = -1;
-        ScaleScrollbar.value = 0.3333f;
+        scaleScrollbar.value = 0.3333f;
 
         if (boxDefaultScale != Vector3.zero)
         {
-            CutScrollbar.value = 1;
+            cutScrollbar.value = 1;
             UpdateBoxScale(boxDefaultScale);
         }
 
@@ -576,7 +668,7 @@ public class MainUI : MonoBehaviour
         scale = scale < 0 ? 0 : scale;
         curScale = scale;
         modifyAnim.transform.localScale = curScale * Vector2.one;
-        ScaleScrollbar.GetComponent<UpdateBtnText>().text = curScale.ToString();
+        scaleScrollbar.GetComponent<UpdateBtnText>().text = curScale.ToString();
     }
 
     private void SetRotation(int rotation)
@@ -585,7 +677,7 @@ public class MainUI : MonoBehaviour
             modifyAnim.transform.localRotation = Quaternion.identity;
 
         modifyAnim.transform.localRotation = Quaternion.Euler(new Vector3(0, 0, rotation));
-        RotationScrollbar.GetComponent<UpdateBtnText>().text = (360 - rotation).ToString();
+        rotationScrollbar.GetComponent<UpdateBtnText>().text = (360 - rotation).ToString();
     }
 
     private Vector2Int modifyAnimaOffset 

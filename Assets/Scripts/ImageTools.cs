@@ -73,10 +73,10 @@ public class ImageTools
         CmdUtil.ProcessCommand(Global.bmp2pngPath, string.Format("{0}\\ {1}\\", path, path));
     }
 
-    public static void ScaleTexture(string path, float proportion, Vector2Int offset)
+    public static void ScaleTexture(string path, float proportion, Vector2Int offset, int dir)
     {
         path = path.Replace(@"\", "//");
-        CmdUtil.ProcessCommand(Global.scaleImageToolPath, string.Format("{0} {1} {2} {3} {4}", path, path, proportion, offset.x, offset.y));
+        CmdUtil.ProcessCommand(Global.scaleImageToolPath, string.Format("{0} {1} {2} {3} {4} {5}", path, path, proportion, offset.x, offset.y, dir));
     }
 
     public static void ScaleTexture(string path, string outPath, float proportion, Vector2Int offset)

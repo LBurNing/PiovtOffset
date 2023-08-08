@@ -12,38 +12,41 @@ public class TextureSize
 
 public class Utils
 {
-    public static List<string> GetAllFileList(string path, string mark = ".cs", string mark1 = "")
+    public static List<string> GetAllFileList(string path, string mark = ".cs", string start = "")
     {
         List<string> files = new List<string>();
         string[] paths = Directory.GetFiles(path);
-        foreach (string _p in paths)
+        foreach (string p in paths)
         {
-            if (_p.ToLower().EndsWith(mark.ToLower()) || (mark1 != "" && _p.ToLower().EndsWith(mark1.ToLower())))
-                //if (_p.ToLower().EndsWith(mark.ToLower()) || (String.IsNullOrEmpty(mark1) && _p.ToLower().EndsWith(mark1.ToLower())))
-                files.Add(_p);
+            string fileName = Path.GetFileName(p);
+            if (fileName.ToLower().EndsWith(mark.ToLower()) && fileName.StartsWith(start))
+                files.Add(p);
         }
+
         string[] dirs = Directory.GetDirectories(path);
-        foreach (string _d in dirs)
+        foreach (string d in dirs)
         {
-            files.AddRange(GetAllFiles(_d, mark));
+            files.AddRange(GetAllFiles(d, mark, start));
         }
+
         return files;
     }
 
-    public static string[] GetAllFiles(string path, string mark = ".cs", string mark1 = "")
+    public static string[] GetAllFiles(string path, string mark = ".cs", string start = "")
     {
         List<string> files = new List<string>();
         string[] paths = Directory.GetFiles(path);
-        foreach (string _p in paths)
+        foreach (string p in paths)
         {
-            if (_p.ToLower().EndsWith(mark.ToLower()) || (mark1 != "" && _p.ToLower().EndsWith(mark1.ToLower())))
-                //if (_p.ToLower().EndsWith(mark.ToLower()) || (String.IsNullOrEmpty(mark1) && _p.ToLower().EndsWith(mark1.ToLower())))
-                files.Add(_p);
+            string fileName = Path.GetFileName(p);
+            if (fileName.ToLower().EndsWith(mark.ToLower()) && fileName.StartsWith(start))
+                files.Add(p);
         }
+
         string[] dirs = Directory.GetDirectories(path);
-        foreach (string _d in dirs)
+        foreach (string d in dirs)
         {
-            files.AddRange(GetAllFiles(_d, mark));
+            files.AddRange(GetAllFiles(d, mark, start));
         }
         return files.ToArray();
     }

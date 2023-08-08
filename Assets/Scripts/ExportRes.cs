@@ -96,7 +96,7 @@ public class ExportRes
 
             int frameCount = 0;
             Frame frame = value.Value;
-            for (byte Direction = (byte)MirDirection.Up; Direction <= (byte)frame.direction; Direction++)
+            for (byte Direction = (byte)EnumDirection.Up; Direction <= (byte)frame.direction; Direction++)
             {
                 int actionIndex = 10000 * (Direction + frame.Dir);
                 for (int FrameIndex = 0; FrameIndex < frame.Count; FrameIndex++)
@@ -170,7 +170,7 @@ public class ExportRes
 
             int frameCount = 0;
             Frame frame = value.Value;
-            for (byte Direction = (byte)MirDirection.Up; Direction <= (byte)frame.direction; Direction++)
+            for (byte Direction = (byte)EnumDirection.Up; Direction <= (byte)frame.direction; Direction++)
             {
                 int actionIndex = 10000 * (Direction + 1) + indexOffset;
                 for (int FrameIndex = 0; FrameIndex < frame.Count; FrameIndex++)
@@ -270,7 +270,7 @@ public class ExportRes
                     Directory.CreateDirectory(outPngParentPath);
 
                 Frame frame = value.Value;
-                for (byte Direction = (byte)MirDirection.Up; Direction <= (byte)MirDirection.UpLeft; Direction++)
+                for (byte Direction = (byte)EnumDirection.Up; Direction <= (byte)EnumDirection.UpLeft; Direction++)
                 {
                     int actionIndex = 10000 * (Direction + 1);
                     for (int FrameIndex = 0; FrameIndex < frame.Count; FrameIndex++)
