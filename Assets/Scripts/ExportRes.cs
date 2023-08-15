@@ -73,9 +73,16 @@ public class ExportRes
 
     public static float frameTime = 0.01f;
 
-    public static IEnumerator ExportCustom(string sourcePath, FrameSet frameSet, int index = 0, Action<int, int> progress = null, Action<int> complete = null)
+    public static IEnumerator ExportCustom(string sourcePath, FrameSet frameSet, string groupName, Action<int, int, string> progress = null, Action complete = null)
     {
         yield return new WaitForSeconds(0.2f);
+        if (string.IsNullOrEmpty(groupName))
+        {
+            progress(0, 0, "组名不能为空");
+            complete?.Invoke();
+            yield break;
+        }
+
         Rename(sourcePath);
 
         int resIndex = 0;
@@ -89,10 +96,18 @@ public class ExportRes
         foreach (var value in frames)
         {
             string actionName = value.Key;
-            string outPngParentPath = sourcePath + "/../修正后的PNG资源/" + Path.GetFileName(sourcePath) + "/" + index + @"\" + actionName + @"\";
+            string outPngParentPath = sourcePath + "/../修正后的PNG资源/" + Path.GetFileName(sourcePath) + "/" + groupName + @"\" + actionName + @"\";
 
-            if (!Directory.Exists(outPngParentPath))
+            if (Directory.Exists(outPngParentPath))
+            {
+                progress(0, 0, "组名重复");
+                complete?.Invoke();
+                yield break;
+            }
+            else
+            {
                 Directory.CreateDirectory(outPngParentPath);
+            }
 
             int frameCount = 0;
             Frame frame = value.Value;
@@ -127,7 +142,7 @@ public class ExportRes
                         bmpData.addColor = addColor;
                         BmpToPng.BmpToPngAction(bmpData);
 
-                        progress?.Invoke(resIndex, maxCount);
+                        progress?.Invoke(resIndex, frameSet.Count, null);
                         yield return new WaitForSeconds(frameTime);
                     }
 
@@ -140,8 +155,8 @@ public class ExportRes
             }
         }
 
-        progress?.Invoke(maxCount, maxCount);
-        complete?.Invoke(++index);
+        progress?.Invoke(frameSet.Count, frameSet.Count, null);
+        complete?.Invoke();
         yield return null;
     }
 

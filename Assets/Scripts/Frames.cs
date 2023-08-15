@@ -49,6 +49,20 @@ public class FrameSet
 
         NeiGuan.Frames.Add(MirAction.NeiGuan, new Frame(0, 60, 0, 60, false, false, EnumDirection.UpRight));
     }
+
+    public int Count
+    {
+        get
+        {
+            int count = 0;
+            foreach(var frame in Name2Frames)
+            {
+                count += frame.Value.MaxCount;
+            }
+
+            return count;
+        }
+    }
 }
 
 public class Frame

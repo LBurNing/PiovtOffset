@@ -126,7 +126,12 @@ public class PlayAnim : MonoBehaviour
     {
         set
         {
-            GetComponent<Canvas>().sortingOrder = value;
+            transform.SetSiblingIndex(value);
+        }
+
+        get
+        {
+            return transform.GetSiblingIndex();
         }
     }
 

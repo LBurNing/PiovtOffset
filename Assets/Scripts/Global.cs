@@ -9,18 +9,21 @@ public class Global
     public static int maxHeight = 4096;
 
     public static string root = Application.dataPath;
+
 #if UNITY_EDITOR
     public static string rotationImageToolPath = root + "/../Tools/Rotate.exe";
     public static string scaleImageToolPath = root + "/../Tools/Scale.exe";
     public static string blendImageToolPath = root + "/../Tools/Blend.exe";
     public static string cutImageToolPath = root + "/../Tools/Cut.exe";
     public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
+    public static string frameJsonPath = root + "/../frame.json";
 #elif UNITY_STANDALONE
     public static string rotationImageToolPath = root + "/../Tools/Rotate.exe";
     public static string scaleImageToolPath = root + "/../Tools/Scale.exe";
     public static string blendImageToolPath = root + "/../Tools/Blend.exe";
     public static string cutImageToolPath = root + "/../Tools/Cut.exe";
     public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
+    public static string frameJsonPath = root + "/../frame.json";
 #endif
 
     public static void InitTransparentColor()

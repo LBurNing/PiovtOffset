@@ -6,12 +6,6 @@ using UnityEngine.UI;
 using TMPro;
 using System;
 
-public enum EnumAnimLayer
-{
-    Modify = 1,
-    Templete = 3,
-}
-
 public class MainUI : MonoBehaviour
 {
     #region Button
@@ -31,6 +25,7 @@ public class MainUI : MonoBehaviour
     private Toggle playFrame;
     private Toggle IrregularToggle;
     private Toggle isScale;
+    private Toggle lockFrame;
     #endregion
 
     #region InputField
@@ -90,6 +85,8 @@ public class MainUI : MonoBehaviour
     private float defaultScale = 1;
     private float curScale = 1;
     private bool refactor = true;
+    private int modifyLayer = 0;
+    private int templeteLayer = 0;
 
     private EnumResType exportType = EnumResType.NeiGuan;
     private EnumDirection animDir = EnumDirection.None;
@@ -115,6 +112,7 @@ public class MainUI : MonoBehaviour
         playFrame = transform.Find("PlayFrame").GetComponent<Toggle>();
         IrregularToggle = transform.Find("IrregularToggle").GetComponent<Toggle>();
         isScale = transform.Find("Select/IsScale").GetComponent<Toggle>();
+        lockFrame = transform.Find("Select/LockFrame").GetComponent<Toggle>();
         #endregion
 
         #region InputField
@@ -165,6 +163,8 @@ public class MainUI : MonoBehaviour
         scaleWidth.text = itemBg.sizeDelta.x.ToString();
         scaleHeight.text = itemBg.sizeDelta.y.ToString();
         irregularUI.MainUI = this;
+        modifyLayer = modifyAnim.layer;
+        templeteLayer = templeteAnim.layer;
         #endregion
 
         AddEvent();
@@ -192,6 +192,7 @@ public class MainUI : MonoBehaviour
         alpha.onClick.AddListener(OnAlpha);
         bmp2Png.onClick.AddListener(OnBmp2Png);
         merge.onClick.AddListener(OnMerge);
+        lockFrame.onValueChanged.AddListener(OnLockFrameChange);
     }
 
     private void OnBmp2Png()
@@ -403,13 +404,13 @@ public class MainUI : MonoBehaviour
         animDir = (EnumDirection)value;
         if (animDir == EnumDirection.UpRight || animDir == EnumDirection.Right || animDir == EnumDirection.DownRight)
         {
-            modifyAnim.layer = (int)EnumAnimLayer.Templete;
-            templeteAnim.layer = (int)EnumAnimLayer.Modify;
+            modifyAnim.layer = templeteLayer;
+            templeteAnim.layer = modifyLayer;
         }
         else
         {
-            modifyAnim.layer = (int)EnumAnimLayer.Modify;
-            templeteAnim.layer = (int)EnumAnimLayer.Templete;
+            modifyAnim.layer = modifyLayer;
+            templeteAnim.layer = templeteLayer;
         }
 
         if (animDir != EnumDirection.None)
@@ -417,6 +418,12 @@ public class MainUI : MonoBehaviour
             PlayModifyAnim(modifyPath.text);
             PlayTempleteAnim(templetePath.text);
         }
+    }
+
+    private void OnLockFrameChange(bool isOn)
+    {
+        PlayModifyAnim(modifyPath.text);
+        PlayTempleteAnim(templetePath.text);
     }
 
     private void OnFrameSpriteBtn()
@@ -519,7 +526,8 @@ public class MainUI : MonoBehaviour
         if (animDir != EnumDirection.None)
             dir = (int)animDir + 1;
 
-        List<string> filePaths = Utils.GetAllFileList(path, ".png", dir.ToString());
+        int maxCount = lockFrame.isOn ? 1 : -1;
+        List<string> filePaths = Utils.GetAllFileList(path, ".png", dir.ToString(), maxCount);
         if (filePaths.Count == 0)
         {
             filePaths = Utils.GetAllFileList(path, ".png");
@@ -539,7 +547,8 @@ public class MainUI : MonoBehaviour
         if (animDir != EnumDirection.None)
             dir = (int)animDir + 1;
 
-        List<string> filePaths = Utils.GetAllFileList(path, ".png", dir.ToString());
+        int maxCount = lockFrame.isOn ? 1 : -1;
+        List<string> filePaths = Utils.GetAllFileList(path, ".png", dir.ToString(), maxCount);
         if (modifyAnim.IsDispose)
             modifyAnim.Dispose();
 

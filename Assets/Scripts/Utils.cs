@@ -12,7 +12,7 @@ public class TextureSize
 
 public class Utils
 {
-    public static List<string> GetAllFileList(string path, string mark = ".cs", string start = "")
+    public static List<string> GetAllFileList(string path, string mark = ".cs", string start = "", int maxCount = -1)
     {
         List<string> files = new List<string>();
         string[] paths = Directory.GetFiles(path);
@@ -20,7 +20,17 @@ public class Utils
         {
             string fileName = Path.GetFileName(p);
             if (fileName.ToLower().EndsWith(mark.ToLower()) && fileName.StartsWith(start))
-                files.Add(p);
+            {
+                if (maxCount == -1)
+                {
+                    files.Add(p);
+                }
+                else
+                {
+                    if (maxCount > files.Count)
+                        files.Add(p);
+                }
+            }
         }
 
         string[] dirs = Directory.GetDirectories(path);
@@ -32,7 +42,7 @@ public class Utils
         return files;
     }
 
-    public static string[] GetAllFiles(string path, string mark = ".cs", string start = "")
+    public static string[] GetAllFiles(string path, string mark = ".cs", string start = "", int maxCount = -1)
     {
         List<string> files = new List<string>();
         string[] paths = Directory.GetFiles(path);
@@ -40,7 +50,17 @@ public class Utils
         {
             string fileName = Path.GetFileName(p);
             if (fileName.ToLower().EndsWith(mark.ToLower()) && fileName.StartsWith(start))
-                files.Add(p);
+            {
+                if (maxCount == -1)
+                {
+                    files.Add(p);
+                }
+                else
+                {
+                    if (maxCount > files.Count)
+                        files.Add(p);
+                }
+            }
         }
 
         string[] dirs = Directory.GetDirectories(path);

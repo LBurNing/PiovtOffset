@@ -15,9 +15,9 @@ public class CreateFrameUI : MonoBehaviour
     private Dropdown _dropdown;
     private Button _delete;
     private MirAction _mirAction = MirAction.Node;
+    private Action _deleteCallBack;
 
-
-    void Start()
+    private void Awake()
     {
         _startPos = transform.Find("StartPos").GetComponent<InputField>();
         _count = transform.Find("Count").GetComponent<InputField>();
@@ -27,7 +27,10 @@ public class CreateFrameUI : MonoBehaviour
         _dir = transform.Find("Dir").GetComponent<InputField>();
         _dropdown = transform.Find("Dropdown").GetComponent<Dropdown>();
         _delete = transform.Find("Delete").GetComponent<Button>();
+    }
 
+    void Start()
+    {
         InitDropdown();
 
         _dropdown.onValueChanged.AddListener(OnSelectAction);
@@ -36,7 +39,8 @@ public class CreateFrameUI : MonoBehaviour
 
     private void OnDelete()
     {
-        Destroy(gameObject);
+        DestroyImmediate(gameObject);
+        _deleteCallBack?.Invoke();
     }
 
     private void OnSelectAction(int type)
@@ -58,6 +62,12 @@ public class CreateFrameUI : MonoBehaviour
         _dropdown.RefreshShownValue();
     }
     
+    public Action deleteCallBack
+    {
+        set { _deleteCallBack = value; }
+        get { return _deleteCallBack; }
+    }
+
     public MirAction mirAction
     { 
         get 
@@ -87,7 +97,7 @@ public class CreateFrameUI : MonoBehaviour
             int skip = 0;
             int maxCount = 0;
             int dir = 0;
-            string Name = "δ֪";
+            string Name = "";
 
             if(!string.IsNullOrEmpty(_startPos.text))
                 start = int.Parse(_startPos.text);
@@ -114,6 +124,16 @@ public class CreateFrameUI : MonoBehaviour
             frame.Dir = dir;
             frame.Name = Name;
             return frame;
+        }
+
+        set
+        {
+            _startPos.text = value.Start.ToString();
+            _count.text = value.Count.ToString();
+            _skip.text = value.Skip.ToString();
+            _maxCount.text = value.MaxCount.ToString();
+            _name.text = value.Name;
+            _dir.text = value.Dir.ToString();
         }
     }
 }
