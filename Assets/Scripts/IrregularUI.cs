@@ -8,6 +8,7 @@ using System.IO;
 public class Group
 {
     public string name;
+    public string path;
     public List<Frame> frames = new List<Frame>();
 }
 
@@ -64,6 +65,7 @@ public class IrregularUI : MonoBehaviour
         {
             GroupUI groupUI = CreateGroup();
             groupUI.GroupName = group.name;
+            groupUI.GroupPath = group.path;
             groupUI.InitFrames(group.frames);
         }
 
@@ -74,12 +76,13 @@ public class IrregularUI : MonoBehaviour
     private void OnSave()
     {
         List<Group> groups = new List<Group>();
-        foreach(var vaule in groupUIs)
+        foreach(var value in groupUIs)
         {
             Group group = new Group();
-            group.name = vaule.GroupName;
+            group.name = value.GroupName;
+            group.path = value.GroupPath;
 
-            foreach(CreateFrameUI frameUI in vaule.frameUIs)
+            foreach (CreateFrameUI frameUI in value.frameUIs)
             {
                 group.frames.Add(frameUI.Frame);
             }
@@ -100,12 +103,6 @@ public class IrregularUI : MonoBehaviour
 
     private void OnExport()
     {
-        if (string.IsNullOrEmpty(mainUI.ModifyPath))
-        {
-            Notice.ShowNotice("重构路径不能为空", Color.red, 3);
-            return;
-        }
-
         if (groupUIs.Count == 0)
         {
             Notice.ShowNotice("组不能为空", Color.red, 3);
@@ -114,7 +111,7 @@ public class IrregularUI : MonoBehaviour
 
         if (refactor)
         {
-            exportCoroutine = StartCoroutine(ExportRes.ExportCustom(mainUI.ModifyPath, curGroup.FrameSet, curGroup.GroupName, curGroup.ShowProgress, OnComoplete));
+            exportCoroutine = StartCoroutine(ExportRes.ExportCustom(curGroup.GroupPath, curGroup.FrameSet, curGroup.GroupName, curGroup.ShowProgress, OnComoplete));
         }
         else
         {

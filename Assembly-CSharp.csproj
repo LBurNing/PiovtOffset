@@ -58,12 +58,14 @@
   <ItemGroup>
     <Compile Include="Assets\Scripts\UpdateBtnText.cs" />
     <Compile Include="Assets\Scripts\BmpToPng.cs" />
+    <Compile Include="Assets\Scripts\GroupUI.cs" />
     <Compile Include="Assets\Scripts\CutTexture.cs" />
     <Compile Include="Assets\Scripts\TextureHelper.cs" />
     <Compile Include="Assets\Scripts\DialogOperate.cs" />
     <Compile Include="Assets\Scripts\LoadAssetHelper.cs" />
     <Compile Include="Assets\Scripts\NoticeUI.cs" />
     <Compile Include="Assets\Scripts\PlayAnim.cs" />
+    <Compile Include="Assets\Scripts\OutlineEx.cs" />
     <Compile Include="Assets\Scripts\DragHandle.cs" />
     <Compile Include="Assets\Scripts\IrregularUI.cs" />
     <Compile Include="Assets\Scripts\CreateLineUI.cs" />
@@ -78,10 +80,10 @@
     <Compile Include="Assets\Scripts\Frames.cs" />
     <Compile Include="Assets\Scripts\Utils.cs" />
     <Compile Include="Assets\Scripts\CmdUtil.cs" />
-    <Compile Include="Assets\Scripts\GroupUI.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Assets\TextureExt.shader" />
+    <None Include="Assets\Shader\TextureExt.shader" />
+    <None Include="Assets\Shader\Outline.shader" />
   </ItemGroup>
   <ItemGroup>
     <Reference Include="UnityEngine">

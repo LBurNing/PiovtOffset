@@ -76,6 +76,20 @@ public class ExportRes
     public static IEnumerator ExportCustom(string sourcePath, FrameSet frameSet, string groupName, Action<int, int, string> progress = null, Action complete = null)
     {
         yield return new WaitForSeconds(0.2f);
+        if (string.IsNullOrEmpty(sourcePath))
+        {
+            progress(0, 0, "资源路径不能为空");
+            complete?.Invoke();
+            yield break;
+        }
+
+        if (!Directory.Exists(sourcePath))
+        {
+            progress(0, 0, "资源路径不存在");
+            complete?.Invoke();
+            yield break;
+        }
+
         if (string.IsNullOrEmpty(groupName))
         {
             progress(0, 0, "组名不能为空");

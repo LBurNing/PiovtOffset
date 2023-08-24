@@ -10,6 +10,7 @@ public class GroupUI : MonoBehaviour
     private Button deleteGrpup;
     private Text progress;
     private InputField groupName;
+    private InputField groupPath;
     private GameObject content;
     private GameObject templete;
     private GameObject frameGroup;
@@ -22,6 +23,7 @@ public class GroupUI : MonoBehaviour
         frameGroup = transform.Find("FrameGroup").gameObject;
         addFrameBtn = transform.Find("btn/addFrame").GetComponent<Button>();
         groupName = transform.Find("btn/groupName").GetComponent<InputField>();
+        groupPath = transform.Find("btn/path").GetComponent<InputField>();
         templete = transform.Find("Frame").gameObject;
         content = transform.Find("FrameGroup/Viewport/Content").gameObject;
         frameScrollRect = transform.Find("FrameGroup").GetComponent<ScrollRect>();
@@ -97,11 +99,11 @@ public class GroupUI : MonoBehaviour
 
         if (error != null)
         {
-            progress.text = string.Format("<color=#FF0000>{0}</color>", error);
+            progress.text = string.Format("<color=#FF0000> {0}</color>", error);
         }
         else
         {
-            progress.text = string.Format("{0}/{1}", cur, total);
+            progress.text = string.Format(" {0}/{1}", cur, total);
         }
     }
 
@@ -123,6 +125,19 @@ public class GroupUI : MonoBehaviour
         set
         {
             groupName.text = value;
+        }
+    }
+
+    public string GroupPath
+    {
+        get
+        {
+            return groupPath.text;
+        }
+
+        set
+        {
+            groupPath.text = value;
         }
     }
 
