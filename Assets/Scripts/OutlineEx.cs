@@ -1,89 +1,146 @@
 using UnityEngine;
 using UnityEngine.UI;
 using System.Collections.Generic;
+using System.Collections;
 
 /// <summary>
-/// UGUI描边
+/// 顶点外扩
 /// </summary>
 public class OutlineEx : BaseMeshEffect
 {
-    public Color OutlineColor = Color.black;
-    [Range(0, 3)]
-    public float OutlineWidth = 2;
+    private const string FONT_TEX_SIZE_NAME = "_FontTexSize";
+    private const string OUTLINE_COLOR_NAME = "_OutlineColor";
+    private const string OUTLINE_WIDTH_NAME = "_OutlineWidth";
+    private const string SHADER_PATH = "UI/OutlineEx";
 
-    [Header("默认使用Base/Scripts/Outline.mat, 如果需要修改描边颜色这个为null")]
+    [Range(0, 3)] public float outlineWidth = 1.5f;
+    public float width = 512;
+    public float height = 512;
+
+    [Header("默认使用Base/Scripts/Outline.mat, 如果需要修改描边颜色这个为null")] 
     public Material material;
-    private static List<UIVertex> m_VetexList = new List<UIVertex>();
+    private Text text;
+
+    public Color outlineColor = Color.black;
+    private static List<UIVertex> vetexList = new List<UIVertex>();
+
+    protected override void Awake()
+    {
+        base.Awake();
+        text = GetComponent<Text>();
+        UpdateMaterial();
+    }
 
     protected override void Start()
     {
         base.Start();
+        UpdateFontMainTexTexelSize(text.font);
+        UpdateAdditionalShaderChannels();
+        Font.textureRebuilt += TextTextureRebuild;
+    }
 
-        if (material == null)
-            material = new Material(Shader.Find("UI/OutlineEx"));
+    private void UpdateAdditionalShaderChannels()
+    {
+        if (graphic == null || graphic.canvas == null)
+            return;
 
-        base.graphic.material = material;
-        var v1 = base.graphic.canvas.additionalShaderChannels;
+        var v1 = graphic.canvas.additionalShaderChannels;
         var v2 = AdditionalCanvasShaderChannels.TexCoord1;
+
         if ((v1 & v2) != v2)
         {
-            base.graphic.canvas.additionalShaderChannels |= v2;
+            graphic.canvas.additionalShaderChannels |= v2;
         }
+
         v2 = AdditionalCanvasShaderChannels.TexCoord2;
         if ((v1 & v2) != v2)
         {
-            base.graphic.canvas.additionalShaderChannels |= v2;
+            graphic.canvas.additionalShaderChannels |= v2;
         }
-
-        this._Refresh();
     }
 
-
-#if UNITY_EDITOR
-    protected override void OnValidate()
+    private void TextTextureRebuild(Font font)
     {
-        base.OnValidate();
+        if (this == null)
+            return;
 
-        if (base.graphic.material != null)
+        if (text == null)
+            text = GetComponent<Text>();
+
+        if (text == null)
         {
-            this._Refresh();
+#if CLIENT
+            Logger.Error("no find text com, name: ", gameObject.name);
+#endif
+            return;
+        }
+
+        if (text.font == font)
+        {
+            UpdateFontMainTexTexelSize(font);
         }
     }
-#endif
 
-
-    private void _Refresh()
+    private void UpdateFontMainTexTexelSize(Font font)
     {
-        base.graphic.material.SetColor("_OutlineColor", this.OutlineColor);
-        base.graphic.material.SetFloat("_OutlineWidth", this.OutlineWidth);
-        base.graphic.SetVerticesDirty();
+        if (material == null)
+            return;
+
+        if (font == null || font.material == null || font.material.mainTexture == null)
+            return;
+
+        width = font.material.mainTexture.width;
+        height = font.material.mainTexture.height;
+        Vector4 vector = new Vector4(1.0f / width, 1.0f / height, width, height);
+        material.SetVector(FONT_TEX_SIZE_NAME, vector);
     }
 
+    private void SetParam()
+    {
+        material.SetColor(OUTLINE_COLOR_NAME, outlineColor);
+        material.SetFloat(OUTLINE_WIDTH_NAME, outlineWidth);
+    }
+
+    private void UpdateMaterial()
+    {
+        if (graphic == null)
+        {
+#if CLIENT
+            Logger.Error("base.graphic == null");
+#endif
+            return;
+        }
+
+        if (material == null)
+            material = new Material(Shader.Find(SHADER_PATH));
+
+        graphic.material = material;
+    }
 
     public override void ModifyMesh(VertexHelper vh)
     {
-        vh.GetUIVertexStream(m_VetexList);
+        SetParam();
+        vh.GetUIVertexStream(vetexList);
 
-        this._ProcessVertices();
+        ProcessVertices();
 
         vh.Clear();
-        vh.AddUIVertexTriangleStream(m_VetexList);
+        vh.AddUIVertexTriangleStream(vetexList);
     }
 
-
-    private void _ProcessVertices()
+    private void ProcessVertices()
     {
-        for (int i = 0, count = m_VetexList.Count - 3; i <= count; i += 3)
+        for (int i = 0, count = vetexList.Count - 3; i <= count; i += 3)
         {
-            var v1 = m_VetexList[i];
-            var v2 = m_VetexList[i + 1];
-            var v3 = m_VetexList[i + 2];
+            var v1 = vetexList[i];
+            var v2 = vetexList[i + 1];
+            var v3 = vetexList[i + 2];
             // 计算原顶点坐标中心点
             //
-            var minX = _Min(v1.position.x, v2.position.x, v3.position.x);
-            var minY = _Min(v1.position.y, v2.position.y, v3.position.y);
-            var maxX = _Max(v1.position.x, v2.position.x, v3.position.x);
-            var maxY = _Max(v1.position.y, v2.position.y, v3.position.y);
+            var minX = Min(v1.position.x, v2.position.x, v3.position.x);
+            var minY = Min(v1.position.y, v2.position.y, v3.position.y);
+            var maxX = Max(v1.position.x, v2.position.x, v3.position.x);
+            var maxY = Max(v1.position.y, v2.position.y, v3.position.y);
             var posCenter = new Vector2(minX + maxX, minY + maxY) * 0.5f;
             // 计算原始顶点坐标和UV的方向
             //
@@ -108,24 +165,23 @@ public class OutlineEx : BaseMeshEffect
             }
             // 计算原始UV框
             //
-            var uvMin = _Min(v1.uv0, v2.uv0, v3.uv0);
-            var uvMax = _Max(v1.uv0, v2.uv0, v3.uv0);
+            var uvMin = Min(v1.uv0, v2.uv0, v3.uv0);
+            var uvMax = Max(v1.uv0, v2.uv0, v3.uv0);
             var uvOrigin = new Vector4(uvMin.x, uvMin.y, uvMax.x, uvMax.y);
             // 为每个顶点设置新的Position和UV，并传入原始UV框
             //
-            v1 = _SetNewPosAndUV(v1, this.OutlineWidth, posCenter, triX, triY, uvX, uvY, uvOrigin);
-            v2 = _SetNewPosAndUV(v2, this.OutlineWidth, posCenter, triX, triY, uvX, uvY, uvOrigin);
-            v3 = _SetNewPosAndUV(v3, this.OutlineWidth, posCenter, triX, triY, uvX, uvY, uvOrigin);
+            v1 = SetNewPosAndUV(v1, outlineWidth, posCenter, triX, triY, uvX, uvY, uvOrigin);
+            v2 = SetNewPosAndUV(v2, outlineWidth, posCenter, triX, triY, uvX, uvY, uvOrigin);
+            v3 = SetNewPosAndUV(v3, outlineWidth, posCenter, triX, triY, uvX, uvY, uvOrigin);
             // 应用设置后的UIVertex
             //
-            m_VetexList[i] = v1;
-            m_VetexList[i + 1] = v2;
-            m_VetexList[i + 2] = v3;
+            vetexList[i] = v1;
+            vetexList[i + 1] = v2;
+            vetexList[i + 2] = v3;
         }
     }
 
-
-    private static UIVertex _SetNewPosAndUV(UIVertex pVertex, float pOutLineWidth,
+    private static UIVertex SetNewPosAndUV(UIVertex pVertex, float pOutLineWidth,
         Vector2 pPosCenter,
         Vector2 pTriangleX, Vector2 pTriangleY,
         Vector2 pUVX, Vector2 pUVY,
@@ -160,27 +216,30 @@ public class OutlineEx : BaseMeshEffect
         return pVertex;
     }
 
-
-    private static float _Min(float pA, float pB, float pC)
+    private static float Min(float pA, float pB, float pC)
     {
         return Mathf.Min(Mathf.Min(pA, pB), pC);
     }
 
-
-    private static float _Max(float pA, float pB, float pC)
+    private static float Max(float pA, float pB, float pC)
     {
         return Mathf.Max(Mathf.Max(pA, pB), pC);
     }
 
-
-    private static Vector2 _Min(Vector2 pA, Vector2 pB, Vector2 pC)
+    private static Vector2 Min(Vector2 pA, Vector2 pB, Vector2 pC)
     {
-        return new Vector2(_Min(pA.x, pB.x, pC.x), _Min(pA.y, pB.y, pC.y));
+        return new Vector2(Min(pA.x, pB.x, pC.x), Min(pA.y, pB.y, pC.y));
     }
 
-
-    private static Vector2 _Max(Vector2 pA, Vector2 pB, Vector2 pC)
+    private static Vector2 Max(Vector2 pA, Vector2 pB, Vector2 pC)
     {
-        return new Vector2(_Max(pA.x, pB.x, pC.x), _Max(pA.y, pB.y, pC.y));
+        return new Vector2(Max(pA.x, pB.x, pC.x), Max(pA.y, pB.y, pC.y));
+    }
+
+    protected override void OnDestroy()
+    {
+        base.OnDestroy();
+        vetexList?.Clear();
+        Font.textureRebuilt -= TextTextureRebuild;
     }
 }

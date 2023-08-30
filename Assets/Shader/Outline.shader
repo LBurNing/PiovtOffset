@@ -6,6 +6,7 @@ Shader "UI/OutlineEx"
         _Color("Tint", Color) = (1, 1, 1, 1)
         _OutlineColor("Outline Color", Color) = (1, 1, 1, 1)
         _OutlineWidth("Outline Width", Float) = 1
+        _FontTexSize("Font Tex Size", Vector) = (1, 1, 1, 1)
 
         _StencilComp("Stencil Comparison", Float) = 8
         _Stencil("Stencil ID", Float) = 0
@@ -60,7 +61,7 @@ Shader "UI/OutlineEx"
                 sampler2D _MainTex;
                 float4 _Color;
                 float4 _TextureSampleAdd;
-                float4 _MainTex_TexelSize;
+                float4 _FontTexSize;
 
                 float4 _OutlineColor;
                 float _OutlineWidth;
@@ -116,7 +117,7 @@ Shader "UI/OutlineEx"
                 {
                     const float sinArray[12] = { 0, 0.5, 0.866, 1, 0.866, 0.5, 0, -0.5, -0.866, -1, -0.866, -0.5 };
                     const float cosArray[12] = { 1, 0.866, 0.5, 0, -0.5, -0.866, -1, -0.866, -0.5, 0, 0.5, 0.866 };
-                    float2 pos = IN.texcoord + _MainTex_TexelSize.xy * float2(cosArray[pIndex], sinArray[pIndex]) * _OutlineWidth;
+                    float2 pos = IN.texcoord + _FontTexSize.xy * float2(cosArray[pIndex], sinArray[pIndex]) * _OutlineWidth;
                     return IsInRect(pos, IN.uvOriginXY, IN.uvOriginZW) * (tex2D(_MainTex, pos) + _TextureSampleAdd).w * _OutlineColor.w;
                 }
 
@@ -126,7 +127,7 @@ Shader "UI/OutlineEx"
                     if (_OutlineWidth > 0)
                     {
                         color.w *= IsInRect(IN.texcoord, IN.uvOriginXY, IN.uvOriginZW);
-                        half4 val = half4(_OutlineColor.x, _OutlineColor.y, _OutlineColor.z, 0);
+                        float4 val = float4(_OutlineColor.x, _OutlineColor.y, _OutlineColor.z, 0);
 
                         val.w += SampleAlpha(0, IN);
                         val.w += SampleAlpha(1, IN);
