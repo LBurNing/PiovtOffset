@@ -47,7 +47,7 @@ public class FrameSet
         Wings.resMaxFrame = Wings.Frames[MirAction.Die].FrameIndex;
         #endregion
 
-        NeiGuan.Frames.Add(MirAction.NeiGuan, new Frame(0, 60, 0, 60, false, false, EnumDirection.UpRight));
+        NeiGuan.Frames.Add(MirAction.NeiGuan, new Frame(0, 1000, 0, 1000, false, false, EnumDirection.UpRight));
     }
 
     public int Count

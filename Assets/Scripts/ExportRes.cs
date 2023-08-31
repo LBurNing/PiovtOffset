@@ -177,12 +177,12 @@ public class ExportRes
     public static IEnumerator Export(string sourcePath, Vector2Int pivot = new Vector2Int(), int indexOffset = 0, Action<int, int> progress = null)
     {
         int maxCount = Utils.FindFiles(sourcePath, "*.png").Count;
-        if(maxCount > 100)
-        {
-            progress?.Invoke(0, maxCount);
-            Debug.LogError("该文件夹不可使用内观类型导出");
-            yield break;
-        }
+        //if(maxCount > 100)
+        //{
+        //    progress?.Invoke(0, maxCount);
+        //    Debug.LogError("该文件夹不可使用内观类型导出");
+        //    yield break;
+        //}
 
         Dictionary<MirAction, Frame> frames = FrameSet.NeiGuan.Frames;
         float alphaSize = 0.9f;
