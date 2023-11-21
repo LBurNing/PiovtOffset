@@ -60,6 +60,11 @@ public class ImageTools
         CmdUtil.ProcessCommand(Global.cutImageToolPath, string.Format("{0} {1} {2} {3}", path, path, width, height));
     }
 
+    public static void pList2Png(string path)
+    {
+        path = path.Replace(@"\", "//");
+        CmdUtil.ProcessCommand(Global.pList2Png, string.Format("{0}", path));
+    }
 
     public static void BlendTexture(string path)
     {

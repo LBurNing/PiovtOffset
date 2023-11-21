@@ -17,6 +17,7 @@ public class Global
     public static string cutImageToolPath = root + "/../Tools/Cut.exe";
     public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
     public static string frameJsonPath = root + "/../frame.json";
+    public static string pList2Png = root + "/../Tools/UnTP.exe";
 #elif UNITY_STANDALONE
     public static string rotationImageToolPath = root + "/../Tools/Rotate.exe";
     public static string scaleImageToolPath = root + "/../Tools/Scale.exe";
@@ -24,6 +25,7 @@ public class Global
     public static string cutImageToolPath = root + "/../Tools/Cut.exe";
     public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
     public static string frameJsonPath = root + "/../frame.json";
+    public static string pList2Png = root + "/../Tools/UnTP.exe";
 #endif
 
     public static void InitTransparentColor()

@@ -19,6 +19,7 @@ public class MainUI : MonoBehaviour
     private Button alpha;
     private Button bmp2Png;
     private Button merge;
+    private Button pList2Png;
     #endregion
 
     #region Toggle
@@ -106,6 +107,7 @@ public class MainUI : MonoBehaviour
         bmp2Png = transform.Find("Select/Bmp2Png").GetComponent<Button>();
         vertical = transform.Find("Select/Vertical").GetComponent<Button>();
         merge = transform.Find("Select/Merge").GetComponent<Button>();
+        pList2Png = transform.Find("Select/pList2Png").GetComponent<Button>();
         #endregion
 
         #region Toggle
@@ -192,6 +194,7 @@ public class MainUI : MonoBehaviour
         alpha.onClick.AddListener(OnAlpha);
         bmp2Png.onClick.AddListener(OnBmp2Png);
         merge.onClick.AddListener(OnMerge);
+        pList2Png.onClick.AddListener(OnpList2Png);
         lockFrame.onValueChanged.AddListener(OnLockFrameChange);
     }
 
@@ -203,6 +206,11 @@ public class MainUI : MonoBehaviour
     private void OnAlpha()
     {
         ImageTools.BlendTexture(modifyPath.text);
+    }
+
+    private void OnpList2Png()
+    {
+        ImageTools.pList2Png(modifyPath.text);
     }
 
     private void OnMerge()
