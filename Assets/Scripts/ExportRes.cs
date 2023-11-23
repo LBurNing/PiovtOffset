@@ -174,7 +174,7 @@ public class ExportRes
         yield return null;
     }
 
-    public static IEnumerator Export(string sourcePath, Vector2Int pivot = new Vector2Int(), int indexOffset = 0, Action<int, int> progress = null)
+    public static IEnumerator Export(string sourcePath, Vector2Int pivot = new Vector2Int(), int indexOffset = 0, Action<int, int, string> progress = null)
     {
         int maxCount = Utils.FindFiles(sourcePath, "*.png").Count;
         //if(maxCount > 100)
@@ -230,7 +230,7 @@ public class ExportRes
                         bmpData.pivot = pivot;
                         BmpToPng.BmpToPngAction(bmpData);
 
-                        progress?.Invoke(resIndex, maxCount);
+                        progress?.Invoke(resIndex, maxCount, "");
                         yield return new WaitForSeconds(frameTime);
                     }
 
@@ -243,18 +243,18 @@ public class ExportRes
             }
         }
 
-        progress?.Invoke(maxCount, maxCount);
+        progress?.Invoke(maxCount, maxCount, "");
         yield return null;
     }
 
-    public static IEnumerator ExportType(EnumResType enumResType, ResData resData, Action<int, int> progress = null)
+    public static IEnumerator ExportType(EnumResType enumResType, ResData resData, Action<int, int, string> progress = null)
     {
         string sourcePath = resData.resPath;
         Dictionary<MirAction, Frame> playerFrames = FrameSet.Players.Frames;
         int maxCount = Utils.FindFiles(sourcePath, "*.png").Count;
         if (enumResType == EnumResType.NeiGuan)
         {
-            progress?.Invoke(0, maxCount);
+            progress?.Invoke(0, maxCount, "");
             Debug.LogError("不能使用内观类型导出该文件夹");
             yield break;
         }
@@ -332,7 +332,7 @@ public class ExportRes
                             bmpData.effectAddColor = addColor;
                             BmpToPng.BmpToPngAction(bmpData);
 
-                            progress?.Invoke(resIndex, maxCount);
+                            progress?.Invoke(resIndex, maxCount, "");
                             yield return new WaitForSeconds(frameTime);
                         }
 
@@ -364,7 +364,7 @@ public class ExportRes
             end = startFrameIndex >= maxCount;
         }
 
-        progress?.Invoke(maxCount, maxCount);
+        progress?.Invoke(maxCount, maxCount, "");
         yield return null;
     }
 

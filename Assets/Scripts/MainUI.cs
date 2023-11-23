@@ -25,6 +25,7 @@ public class MainUI : MonoBehaviour
     #region Toggle
     private Toggle playFrame;
     private Toggle IrregularToggle;
+    private Toggle mapToggle;
     private Toggle isScale;
     private Toggle lockFrame;
     #endregion
@@ -47,6 +48,7 @@ public class MainUI : MonoBehaviour
     private PlayAnim modifyAnim;
     private FrameUI templeteFrameUI;
     private IrregularUI irregularUI;
+    private MapSettingsUI mapSettingsUI;
     private List<FrameUI> frameUIs;
     private UpdateBtnText boxCom;
     #endregion
@@ -113,6 +115,7 @@ public class MainUI : MonoBehaviour
         #region Toggle
         playFrame = transform.Find("PlayFrame").GetComponent<Toggle>();
         IrregularToggle = transform.Find("IrregularToggle").GetComponent<Toggle>();
+        mapToggle = transform.Find("mapToggle").GetComponent<Toggle>();
         isScale = transform.Find("Select/IsScale").GetComponent<Toggle>();
         lockFrame = transform.Find("Select/LockFrame").GetComponent<Toggle>();
         #endregion
@@ -142,6 +145,7 @@ public class MainUI : MonoBehaviour
         modifyAnim = transform.Find("ModifyAnim").GetComponent<PlayAnim>();
         templeteFrameUI = transform.Find("Templete").GetComponent<FrameUI>();
         irregularUI = transform.Find("Irregular").GetComponent<IrregularUI>();
+        mapSettingsUI = transform.Find("mapSettings").GetComponent<MapSettingsUI>();
         boxCom = box.GetComponent<UpdateBtnText>();
         #endregion
 
@@ -165,6 +169,7 @@ public class MainUI : MonoBehaviour
         scaleWidth.text = itemBg.sizeDelta.x.ToString();
         scaleHeight.text = itemBg.sizeDelta.y.ToString();
         irregularUI.MainUI = this;
+        mapSettingsUI.MainUI = this;
         modifyLayer = modifyAnim.layer;
         templeteLayer = templeteAnim.layer;
         #endregion
@@ -183,6 +188,7 @@ public class MainUI : MonoBehaviour
         playFrame.onValueChanged.AddListener(OnFrameValueChanged);
         dropdown.onValueChanged.AddListener(OnExportTypeClick);
         IrregularToggle.onValueChanged.AddListener(OnIrregularValueChanged);
+        mapToggle.onValueChanged.AddListener(OnMapValueChanged);
         scaleWidth.onValueChanged.AddListener(OnWidthValueChanged);
         scaleHeight.onValueChanged.AddListener(OnHeightValueChanged);
         isScale.onValueChanged.AddListener(OnIsScaleValueChanged);
@@ -218,7 +224,7 @@ public class MainUI : MonoBehaviour
         StartCoroutine(Merge(ShowProgress));
     }
 
-    private IEnumerator Merge(Action<int, int> progressCallBack)
+    private IEnumerator Merge(Action<int, int, string> progressCallBack)
     {
         string path = modifyPath.text;
         int progress = 0;
@@ -231,7 +237,7 @@ public class MainUI : MonoBehaviour
             ImageTools.Merge(filePath);
 
             progress++;
-            progressCallBack?.Invoke(progress, total);
+            progressCallBack?.Invoke(progress, total, "");
             yield return new WaitForSeconds(ExportRes.frameTime);
         }
 
@@ -396,6 +402,11 @@ public class MainUI : MonoBehaviour
         irregularUI?.gameObject.SetActive(isOn);
     }
 
+    private void OnMapValueChanged(bool isOn)
+    {
+        mapSettingsUI?.gameObject.SetActive(isOn);
+    }
+
     private void OnFrameValueChanged(bool isOn)
     {
         foreach (FrameUI frame in frameUIs)
@@ -504,12 +515,12 @@ public class MainUI : MonoBehaviour
         refactorBtn.GetComponent<UpdateBtnText>().text = refactor ? "ÖØ¹¹" : "ÔÝÍ£";
     }
 
-    public void ShowProgress(int cur, int total)
+    public void ShowProgress(int cur, int total, string text = "")
     {
         if (progressText == null)
             return;
 
-        progressText.text = string.Format("{0}/{1}", cur, total);
+        progressText.text = string.Format("{0}{1}/{2}", text, cur, total);
         float x = (float)cur * (float)590.0f / (float)total;
         progressImage.rectTransform.sizeDelta = new Vector2(x, progressImage.rectTransform.sizeDelta.y);
     }
@@ -593,7 +604,7 @@ public class MainUI : MonoBehaviour
         StartCoroutine(Export(ShowProgress));
     }
 
-    private IEnumerator Export(Action<int, int> progressCallBack)
+    private IEnumerator Export(Action<int, int, string> progressCallBack)
     {
         //Ëõ·Å+Æ«ÒÆ
         string path = modifyPath.text;
@@ -624,7 +635,7 @@ public class MainUI : MonoBehaviour
                 ImageTools.Load(filePath, modifyAnimaOffset);
 
                 progress++;
-                progressCallBack?.Invoke(progress, total);
+                progressCallBack?.Invoke(progress, total, "");
                 yield return new WaitForSeconds(ExportRes.frameTime);
             }
         }
