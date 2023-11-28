@@ -18,6 +18,7 @@ public class Global
     public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
     public static string frameJsonPath = root + "/../frame.json";
     public static string pList2Png = root + "/../Tools/UnTP.exe";
+    public static string colorToBlack = root + "/../Tools/205colorToblack.exe";
 #elif UNITY_STANDALONE
     public static string rotationImageToolPath = root + "/../Tools/Rotate.exe";
     public static string scaleImageToolPath = root + "/../Tools/Scale.exe";
@@ -26,6 +27,7 @@ public class Global
     public static string bmp2pngPath = root + "/../Tools/Bmp2Png.exe";
     public static string frameJsonPath = root + "/../frame.json";
     public static string pList2Png = root + "/../Tools/UnTP.exe";
+    public static string colorToBlack = root + "/../Tools/205colorToblack.exe";
 #endif
 
     public static void InitTransparentColor()

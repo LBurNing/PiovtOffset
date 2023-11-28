@@ -10,6 +10,7 @@ public class MapSettingsUI : MonoBehaviour
     private GameObject content;
     private GameObject templete;
     private MainUI mainUI;
+    private InputField outPath;
 
     void Start()
     {
@@ -17,6 +18,7 @@ public class MapSettingsUI : MonoBehaviour
         addBtn = transform.Find("AddBtn").GetComponent<Button>();
         templete = transform.Find("Group").gameObject;
         content = transform.Find("ScrollView/Viewport/Content").gameObject;
+        outPath = transform.Find("ScrollView/Viewport/Content/out").GetComponent<InputField>();
 
         exportBtn.onClick.AddListener(OnExport);
         addBtn.onClick.AddListener(OnAddMapSetting);
@@ -41,7 +43,9 @@ public class MapSettingsUI : MonoBehaviour
         MapGroupUI[] mapGroups = gameObject.GetComponentsInChildren<MapGroupUI>();
         foreach (MapGroupUI mapGroupUI in mapGroups)
         {
-            MapTools.mapdatas.Add(mapGroupUI.mapData);
+            MapData mapData = mapGroupUI.mapData;
+            mapData.outPath = outPath.text;
+            MapTools.mapdatas.Add(mapData);
         }
     }
 

@@ -66,6 +66,12 @@ public class ImageTools
         CmdUtil.ProcessCommand(Global.pList2Png, string.Format("{0}", path));
     }
 
+    public static void ColorToblack(string path, string outPath)
+    {
+        path = path.Replace(@"\", "//");
+        CmdUtil.ProcessCommand(Global.colorToBlack, string.Format("{0} {1}", path, outPath));
+    }
+
     public static void BlendTexture(string path)
     {
         path = path.Replace(@"\", "//");

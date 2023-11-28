@@ -9,6 +9,7 @@ public class MapResData
 {
     public MapResType resType;
     public string path;
+    public int index = -1;
  
     public int Index
     {
@@ -38,7 +39,8 @@ public class MapResData
 
 public class MapData
 {
-    public string path;
+    public string outPath;
+    public List<string> paths = new List<string>();
     public List<MapResData> mapResList = new List<MapResData>();
 }
 
@@ -71,7 +73,7 @@ public static class MapTools
     public static int thumbnailHeight = 400;
     public static int textureMaxSize = 16384;
     public static List<MapData> mapdatas = new List<MapData>();
-    public static string mapRootPath;
+    public static string outMapRootPath;
     private static Action<int, int, string> progressCallback = null;
 
     public static IEnumerator ReadMapData(Action<int, int, string> progress = null)
@@ -89,12 +91,23 @@ public static class MapTools
                 if (string.IsNullOrEmpty(resData.path))
                     continue;
 
-                Libraries.MapLibs[resData.Index] = new MLibrary(resData.path);
-                Libraries.ListItems[resData.Index] = new ListItem(resData.path, resData.Index);
+                Libraries.MapLibs[resData.index != -1 ?resData.index : resData.Index] = new MLibrary(resData.path);
+                Libraries.ListItems[resData.index != -1 ? resData.index : resData.Index] = new ListItem(resData.path, resData.Index);
             }
 
-            mapRootPath = Path.GetFullPath(data.path + "/../../out/");
-            yield return UnzipMap(data.path);
+            if (string.IsNullOrEmpty(data.outPath))
+            {
+                Notice.ShowNotice("输出文件夹不能为空..", Color.red, 3);
+                yield break;
+            }
+
+            outMapRootPath = Path.GetFullPath(data.outPath + "/Maps/");
+            int count = data.paths.Count;
+            while (count > 0)
+            {
+                yield return UnzipMap(data.paths[count - 1]);
+                count--;
+            }
         }
 
         yield return null;
@@ -111,6 +124,8 @@ public static class MapTools
         yield return null;
 
         SaveMapBlockTexture();
+        string jpgPath = mapSavePath + map.mapName + ".jpg";
+        ImageTools.ColorToblack(jpgPath, jpgPath);
         Dispose();
         progressCallback?.Invoke(0, 0, "导出成功: " + mapSavePath);
         yield return null;
@@ -170,11 +185,11 @@ public static class MapTools
 
     private static void InitPath()
     {
-        mapSavePath = mapRootPath + @"map\tiles\" + map.mapName + @"\";
+        mapSavePath = outMapRootPath + @"map\tiles\" + map.mapName + @"\";
         if (!Directory.Exists(mapSavePath))
             Directory.CreateDirectory(mapSavePath);
 
-        mapJsonSavePath = mapRootPath + @"map\Json\";
+        mapJsonSavePath = outMapRootPath + @"map\Json\";
         if (!Directory.Exists(mapJsonSavePath))
             Directory.CreateDirectory(mapJsonSavePath);
     }
