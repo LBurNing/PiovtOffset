@@ -420,7 +420,7 @@ public static class MapTools
                         }
 
                         dirIndex++;
-                        for (int i = index - 1; i < index + cellInfo.FrontAnimationFrame - 1; i++)
+                        for (int i = index - 1; i < index + animation - 1; i++)
                         {
                             Save(libIndex, i, dirIndex, blend);
                         }
