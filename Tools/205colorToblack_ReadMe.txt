@@ -1,0 +1,1 @@
+例子： D:\FGCQ3\editor\ImageTools\Tools\205colorToblack.exe D:\FGCQ3\editor\ImageTools\out\map\tiles\cqbg4\cqbg4.jpg D:\FGCQ3\editor\ImageTools\out\map\tiles\cqbg4\cqbg_out.png

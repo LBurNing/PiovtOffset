@@ -298,6 +298,11 @@ public class MapReader
                     if (MapCells[x, y].Light >= 100 && MapCells[x, y].Light <= 119)
                         MapCells[x, y].FishingCell = true;
 
+                    if (MapCells[x, y].FrontAnimationFrame > 0)
+                    {
+                        UnityEngine.Debug.LogError(FileName + " FrontAnimationFrame: " + MapCells[x, y].FrontAnimationFrame);
+                    }
+
                     if (MapCells[x, y].BackIndex > 100)
                     {
                         if (BackIndex != MapCells[x, y].BackIndex)

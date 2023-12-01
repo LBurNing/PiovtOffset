@@ -75,6 +75,7 @@ public static class MapTools
     public static List<MapData> mapdatas = new List<MapData>();
     public static string outMapRootPath;
     private static Action<int, int, string> progressCallback = null;
+    private static int animationIndex = 50000;
 
     public static IEnumerator ReadMapData(Action<int, int, string> progress = null)
     {
@@ -98,6 +99,12 @@ public static class MapTools
             if (string.IsNullOrEmpty(data.outPath))
             {
                 Notice.ShowNotice("输出文件夹不能为空..", Color.red, 3);
+                yield break;
+            }
+
+            if(data.outPath.Contains(" "))
+            {
+                Notice.ShowNotice("输出文件夹路径中不能带空格..", Color.red, 5);
                 yield break;
             }
 
@@ -341,6 +348,7 @@ public static class MapTools
         int tileIndex = 0;
         int tileCount = map.Height * map.Width;
         int progress = 0;
+        int dirIndex = 0;
 
         for (var y = 0; y <= map.Height; y++)
         {
@@ -380,6 +388,7 @@ public static class MapTools
                     index += 1 % (animation + animation * animationTick) / (1 + animationTick);
                 }
 
+                animationIndex = 50000;
                 var doorOffset = M2CellInfo[x, y].DoorOffset;
                 var s = Libraries.MapLibs[libIndex].GetSize(index);
                 //不是 48*32 或96*64 的地砖 是大物体
@@ -407,7 +416,13 @@ public static class MapTools
                         //不需要混合
                         else
                         {
-                            DrawFront(libIndex, index, drawX, drawY - s.Height);
+                            //DrawFront(libIndex, index-1, drawX, drawY - s.Height);
+                        }
+
+                        dirIndex++;
+                        for (int i = index - 1; i < index + cellInfo.FrontAnimationFrame - 1; i++)
+                        {
+                            Save(libIndex, i, dirIndex, blend);
                         }
                     }
                     //如果没动画 
@@ -439,6 +454,66 @@ public static class MapTools
         }
 
         yield return null;
+    }
+
+
+    private static void Save(int libIndex, int index, int dirIndex, bool isAlpha = false)
+    {
+        string outpath = $"{mapSavePath}/{dirIndex}/待机/";
+        if (!Directory.Exists(outpath))
+            Directory.CreateDirectory(outpath);
+
+        MLibrary.MImage mImage = Libraries.MapLibs[libIndex].GetMImage(index);
+        if (mImage.Image == null)
+        {
+            return;
+        }
+
+        MemoryStream ms = new MemoryStream();
+        mImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+
+        var buffer = new byte[ms.Length];
+        ms.Position = 0;
+        ms.Read(buffer, 0, buffer.Length);
+        Texture2D t2D = new Texture2D(mImage.Width, mImage.Height);
+        t2D.LoadImage(buffer);
+        t2D.Apply();
+
+        if (isAlpha)
+        {
+            for (int colori = 0; colori < t2D.width; colori++)
+            {
+                for (int colorj = 0; colorj < t2D.height; colorj++)
+                {
+                    Color color = t2D.GetPixel(colori, colorj);
+                    float r = color.r;
+                    float g = color.g;
+                    float b = color.b;
+                    float a = color.a;
+                    float addColorValue = 0;
+
+                    float alpha = color.grayscale;
+                    if (a > 0)
+                    {
+                        alpha = alpha + alpha / 1.2f;
+                        addColorValue = color.grayscale / 5;
+                    }
+
+                    a = alpha;
+
+                    color = new Color(r + addColorValue, g + addColorValue, b + addColorValue, a);
+                    t2D.SetPixel(colori, colorj, color);
+                }
+            }
+
+            t2D.Apply();
+        }
+
+        Utils.SavePng(outpath + animationIndex + ".png", t2D);
+        animationIndex++;
+        UnityEngine.Object.DestroyImmediate(t2D);
+        ms.Close();
+        ms.Dispose();
     }
 
     private static void DrawFront(int libIndex, int index, int x, int y, bool isAlpha = false)

@@ -546,7 +546,7 @@ public class MainUI : MonoBehaviour
             dir = (int)animDir + 1;
 
         int maxCount = lockFrame.isOn ? 1 : -1;
-        List<string> filePaths = Utils.GetAllFileList(path, ".png", (dir * 1000).ToString(), maxCount);
+        List<string> filePaths = Utils.GetAllFileList(path, ".png", (dir * 100).ToString(), maxCount);
         if (filePaths.Count == 0)
         {
             filePaths = Utils.GetAllFileList(path, ".png");
@@ -567,7 +567,7 @@ public class MainUI : MonoBehaviour
             dir = (int)animDir + 1;
 
         int maxCount = lockFrame.isOn ? 1 : -1;
-        List<string> filePaths = Utils.GetAllFileList(path, ".png", (dir * 1000).ToString(), maxCount);
+        List<string> filePaths = Utils.GetAllFileList(path, ".png", (dir * 100).ToString(), maxCount);
         if (modifyAnim.IsDispose)
             modifyAnim.Dispose();
 
