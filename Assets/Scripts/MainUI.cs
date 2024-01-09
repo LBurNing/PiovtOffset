@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.IO;
 using UnityEngine;
 using UnityEngine.UI;
-using TMPro;
 using System;
 
 public class MainUI : MonoBehaviour
@@ -489,6 +488,7 @@ public class MainUI : MonoBehaviour
     {
         if (refactor)
         {
+            ExportRes.Fill(modifyPath.text);
             ExportRes.Rename(modifyPath.text);
             if (exportType == EnumResType.NeiGuan)
             {

@@ -368,6 +368,32 @@ public class ExportRes
         yield return null;
     }
 
+    public static void Fill(string sourcePath)
+    {
+        List<string> pointPaths = Utils.GetAllFileList(sourcePath, ".txt");
+        List<string> imagePaths = Utils.GetAllFileList(sourcePath, ".png");
+
+        if (imagePaths.Count > pointPaths.Count)
+        {
+            foreach (string filePath in imagePaths)
+            {
+                string fileName = Path.GetFileNameWithoutExtension(filePath);
+                DirectoryInfo directoryInfo = new DirectoryInfo(filePath);
+                string parentPath = directoryInfo.Parent.FullName;
+                string textParentPath = $"{parentPath}/Placements";
+
+                if (!Directory.Exists(textParentPath))
+                    Directory.CreateDirectory(textParentPath);
+
+                string textPath = $"{textParentPath}/{fileName}.txt";
+                if (!File.Exists(textPath))
+                {
+                    File.WriteAllText(textPath, "0\r\n0");
+                }
+            }
+        }
+    }
+
     public static void Rename(string sourcePath)
     {
         int index = 0;

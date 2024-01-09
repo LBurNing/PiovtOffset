@@ -163,7 +163,7 @@ public class MapReader
             return;
         }
         //if it's none of the above load the default old school format
-        LoadMapType2();
+        LoadMapType0();
 
     }
 

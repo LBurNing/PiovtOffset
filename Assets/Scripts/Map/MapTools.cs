@@ -22,10 +22,10 @@ public class MapResData
             switch(resType)
             {
                 case MapResType.obj:
-                    offsetIndex = 20;
+                    offsetIndex = 2;
                     break;
                 case MapResType.smtiles:
-                    offsetIndex = 10;
+                    offsetIndex = 1;
                     break;
                 case MapResType.tiles:
                     offsetIndex = 0;
@@ -62,7 +62,7 @@ public static class MapTools
     private static List<MapBlock> mapBlocks;
 
     public static int PROGRESS_INTERVAR = 200;
-    public static int DEFAULT_INDEX = 100;
+    public static int DEFAULT_INDEX = 0;
     public static int mapBlockSize_x = 256;
     public static int mapBlockSize_y = 256;
     public static int blockYCount = 0;
