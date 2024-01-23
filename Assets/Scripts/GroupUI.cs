@@ -8,6 +8,7 @@ public class GroupUI : MonoBehaviour
     private Button openBtn;
     private Button addFrameBtn;
     private Button deleteGrpup;
+    private Button pasteBtn;
     private Text progress;
     private InputField groupName;
     private InputField groupPath;
@@ -15,6 +16,7 @@ public class GroupUI : MonoBehaviour
     private GameObject templete;
     private GameObject frameGroup;
     private ScrollRect frameScrollRect;
+    private IrregularUI irregularUI;
 
     private void Awake()
     {
@@ -22,6 +24,7 @@ public class GroupUI : MonoBehaviour
         deleteGrpup = transform.Find("btn/Delete").GetComponent<Button>();
         frameGroup = transform.Find("FrameGroup").gameObject;
         addFrameBtn = transform.Find("btn/addFrame").GetComponent<Button>();
+        pasteBtn = transform.Find("btn/paste").GetComponent<Button>();
         groupName = transform.Find("btn/groupName").GetComponent<InputField>();
         groupPath = transform.Find("btn/path").GetComponent<InputField>();
         templete = transform.Find("Frame").gameObject;
@@ -36,6 +39,7 @@ public class GroupUI : MonoBehaviour
         addFrameBtn.onClick.AddListener(OnAddFrame);
         deleteGrpup.onClick.AddListener(OnDeleteFrame);
         groupName.onValueChanged.AddListener(OnGroupNameChanged);
+        pasteBtn.onClick.AddListener(OnPaste);
     }
 
     public void Find()
@@ -43,9 +47,29 @@ public class GroupUI : MonoBehaviour
 
     }
 
+    public IrregularUI IrregularUI
+    {
+        set { irregularUI = value; }
+    }
+
+    public void OnPaste()
+    {
+        GroupUI groupUI = irregularUI.CreateGroup();
+        groupUI.GroupName = GroupName;
+        groupUI.GroupPath = GroupPath;
+
+        List<Frame> frames = new List<Frame>();
+        foreach (CreateFrameUI frameUI in frameUIs)
+        {
+            frames.Add(frameUI.Frame);
+        }
+
+        groupUI.InitFrames(frames);
+    }
+
     public void InitFrames(List<Frame> frames)
     {
-        foreach(Frame frame in frames)
+        foreach (Frame frame in frames)
         {
             CreateFrameUI frameUI = CreateFrameUI();
             frameUI.Frame = frame;
@@ -81,7 +105,6 @@ public class GroupUI : MonoBehaviour
         go.transform.SetParent(content.transform, false);
         CreateFrameUI frameUI = go.GetComponent<CreateFrameUI>();
         frameUI.deleteCallBack = UpdateHeight;
-
         UpdateHeight();
         return frameUI;
     }

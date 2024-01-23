@@ -68,9 +68,6 @@ public class IrregularUI : MonoBehaviour
             groupUI.GroupPath = group.path;
             groupUI.InitFrames(group.frames);
         }
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
-        groupScrollRect.verticalNormalizedPosition = 0;
     }
 
     private void OnSave()
@@ -93,7 +90,7 @@ public class IrregularUI : MonoBehaviour
         string frameJson = JsonConvert.SerializeObject(groups);
         File.WriteAllText(Global.frameJsonPath, frameJson);
 
-        Notice.ShowNotice(string.Format("±£¥Ê≥…π¶: {0}", Path.GetFullPath(Global.frameJsonPath)), Color.green, 3);
+        Notice.ShowNotice(string.Format("‰øùÂ≠òÊàêÂäü: {0}", Path.GetFullPath(Global.frameJsonPath)), Color.green, 3);
     }
 
     private void OnDesc()
@@ -105,7 +102,7 @@ public class IrregularUI : MonoBehaviour
     {
         if (groupUIs.Count == 0)
         {
-            Notice.ShowNotice("◊È≤ªƒ‹Œ™ø’", Color.red, 3);
+            Notice.ShowNotice("ÁªÑ‰∏çËÉΩ‰∏∫Á©∫", Color.red, 3);
             return;
         }
 
@@ -119,7 +116,7 @@ public class IrregularUI : MonoBehaviour
         }
 
         refactor = !refactor;
-        exportBtn.GetComponent<UpdateBtnText>().text = refactor ? "≤ªπÊ‘Ú÷ÿππ" : "‘›Õ£";
+        exportBtn.GetComponent<UpdateBtnText>().text = refactor ? "‰∏çËßÑÂàôÈáçÊûÑ" : "ÊöÇÂÅú";
     }
 
     private void OnComoplete()
@@ -129,7 +126,7 @@ public class IrregularUI : MonoBehaviour
         if (groupIndex >= groupUIs.Count)
         {
             groupIndex = 0;
-            exportBtn.GetComponent<UpdateBtnText>().text = refactor ? "≤ªπÊ‘Ú÷ÿππ" : "‘›Õ£";
+            exportBtn.GetComponent<UpdateBtnText>().text = refactor ? "‰∏çËßÑÂàôÈáçÊûÑ" : "ÊöÇÂÅú";
             mainUI.ShowProgress(0, 0);
         }
         else
@@ -141,18 +138,19 @@ public class IrregularUI : MonoBehaviour
     private void OnAddGroup()
     {
         CreateGroup();
-
-        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
-        groupScrollRect.verticalNormalizedPosition = 0;
     }
 
-    private GroupUI CreateGroup()
+    public GroupUI CreateGroup()
     {
         GameObject go = Instantiate(templete);
         go.SetActive(true);
         go.transform.SetParent(content.transform, false);
 
         GroupUI groupUI = go.GetComponent<GroupUI>();
+        groupUI.IrregularUI = this;
+
+        LayoutRebuilder.ForceRebuildLayoutImmediate(content.transform as RectTransform);
+        groupScrollRect.verticalNormalizedPosition = 0;
         return groupUI;
 
     }
