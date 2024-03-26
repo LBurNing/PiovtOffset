@@ -161,7 +161,7 @@ public class MainUI : MonoBehaviour
         dirDropdown = transform.Find("Select/DirDropdown").GetComponent<Dropdown>();
         #endregion
 
-        #region Ä¬ÈÏÖµ
+        #region é»˜è®¤å€¼
         templeteAnimIndex = templeteAnim.transform.GetSiblingIndex();
         modifyAnimIndex = modifyAnim.transform.GetSiblingIndex();
         dirDropdown.value = (int)EnumDirection.None;
@@ -490,10 +490,11 @@ public class MainUI : MonoBehaviour
         {
             ExportRes.Fill(modifyPath.text);
             ExportRes.Rename(modifyPath.text);
+            ImageTools.TxtFormat(modifyPath.text);
             if (exportType == EnumResType.NeiGuan)
             {
                 exportCoroutine = StartCoroutine(ExportRes.Export(modifyPath.text, Vector2Int.zero, 10000 * (int)EnumDirection.Down, ShowProgress));
-                modifyPath.text = modifyPath.text + @"\´ı»ú\";
+                modifyPath.text = modifyPath.text + @"\å¾…æœº\";
             }
             else
             {
@@ -512,7 +513,7 @@ public class MainUI : MonoBehaviour
         }
 
         refactor = !refactor;
-        refactorBtn.GetComponent<UpdateBtnText>().text = refactor ? "ÖØ¹¹" : "ÔİÍ£";
+        refactorBtn.GetComponent<UpdateBtnText>().text = refactor ? "é‡æ„" : "æš‚åœ";
     }
 
     public void ShowProgress(int cur, int total, string text = "")
@@ -550,7 +551,7 @@ public class MainUI : MonoBehaviour
         if (filePaths.Count == 0)
         {
             filePaths = Utils.GetAllFileList(path, ".png");
-            Notice.ShowNotice(string.Format("Ã»ÓĞÕÒµ½{0}·½ÏòÉÏµÄ×ÊÔ´, Ä¬ÈÏ²¥·ÅÎÄ¼ş¼ĞÏÂµÄËùÓĞÍ¼Æ¬", dir.ToString()), Color.red, 3);
+            Notice.ShowNotice(string.Format("æ²¡æœ‰æ‰¾åˆ°{0}æ–¹å‘ä¸Šçš„èµ„æº, é»˜è®¤æ’­æ”¾æ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰å›¾ç‰‡", dir.ToString()), Color.red, 3);
         }
 
         templeteAnim.Dispose();
@@ -574,7 +575,7 @@ public class MainUI : MonoBehaviour
         if (filePaths.Count == 0)
         {
             filePaths = Utils.GetAllFileList(path, ".png");
-            Notice.ShowNotice(string.Format("Ã»ÓĞÕÒµ½{0}·½ÏòÉÏµÄ×ÊÔ´, Ä¬ÈÏ²¥·ÅÎÄ¼ş¼ĞÏÂµÄËùÓĞÍ¼Æ¬", dir.ToString()), Color.red, 3);
+            Notice.ShowNotice(string.Format("æ²¡æœ‰æ‰¾åˆ°{0}æ–¹å‘ä¸Šçš„èµ„æº, é»˜è®¤æ’­æ”¾æ–‡ä»¶å¤¹ä¸‹çš„æ‰€æœ‰å›¾ç‰‡", dir.ToString()), Color.red, 3);
         }
 
         modifyAnim.GetComponent<RectTransform>().anchoredPosition = Vector2.zero;
@@ -596,7 +597,7 @@ public class MainUI : MonoBehaviour
         int height = (int)(scale.y * 100);
         int size = TextureHelper.GetAtlasSize(width, height, modifyAnim.frameCount);
         boxCom.scale = new Vector3(scale.x, scale.y, 0);
-        boxCom.text = string.Format("²ÃÇĞ w={0} h={1} c={2} a=<color=#ff0000>{3}</color>", width, height, modifyAnim.frameCount, size);
+        boxCom.text = string.Format("è£åˆ‡ w={0} h={1} c={2} a=<color=#ff0000>{3}</color>", width, height, modifyAnim.frameCount, size);
     }
 
     private void OnExportClick()
@@ -606,12 +607,12 @@ public class MainUI : MonoBehaviour
 
     private IEnumerator Export(Action<int, int, string> progressCallBack)
     {
-        //Ëõ·Å+Æ«ÒÆ
+        //ç¼©æ”¾+åç§»
         string path = modifyPath.text;
         if (curScale != 1 || modifyAnimaOffset != Vector2Int.zero)
             ImageTools.ScaleTexture(path, curScale, modifyAnimaOffset, (int)animDir + 1);
 
-        //²ÃÇĞ
+        //è£åˆ‡
         if (isScale.isOn && cutScrollbar.value != 1)
         {
             int width = (int)(boxCom.scale.x * 100);
@@ -621,7 +622,7 @@ public class MainUI : MonoBehaviour
 
         if (frameUIs.Count > 0)
         {
-            //²»¹æÔòÆ«ÒÆ
+            //ä¸è§„åˆ™åç§»
             int progress = 0;
             string[] filePaths = Directory.GetFiles(path);
             int total = filePaths.Length;

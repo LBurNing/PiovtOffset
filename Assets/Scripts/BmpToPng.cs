@@ -5,6 +5,7 @@ using UnityEditor;
 using System.IO;
 using System;
 using System.Net;
+using System.Text;
 
 public class Offset
 {
@@ -48,7 +49,7 @@ public class BmpToPng
         }
 
         Texture2D t2D = Utils.PngToTexture2D(bmpData.bmpPath);
-        #region ÖØĞÄÆ«ÒÆ
+        #region é‡å¿ƒåç§»
         int offsetx = -25 + bmpData.pivot.x;
         int offsety = 19 + bmpData.pivot.y;
 
@@ -56,17 +57,17 @@ public class BmpToPng
         int height = t2D.height * 2 + Math.Abs(offset.y) + Math.Abs(offsety) + 100;
         #endregion
 
-        #region ÆğÊ¼µã¼ÆËã
-        //¸Ã×ÊÔ´×ø±êÏµ×óÉÏ½ÇÎª0,0µã
-        //unityÖĞ×óÏÂ½ÇÎª0,0µã
+        #region èµ·å§‹ç‚¹è®¡ç®—
+        //è¯¥èµ„æºåæ ‡ç³»å·¦ä¸Šè§’ä¸º0,0ç‚¹
+        //unityä¸­å·¦ä¸‹è§’ä¸º0,0ç‚¹
 
-        //xÆğÊ¼Î»ÖÃ¼ÆËã´óÍ¼µÄÖĞĞÄµã+offset.x¼´¿É
-        //yÆğÊ¼Î»ÖÃ¼ÆËã ÓÉÓÚ×ÊÔ´µÄ×ø±ê0,0ºÍunityÖĞµÄ0,0 yÖáÏòÏà·´ Í¼Æ¬µÄ¸ß¶È+offset.y ´óÍ¼µÄÖĞĞÄµã-¼õÈ¥Æ«ÒÆÖµ
+        //xèµ·å§‹ä½ç½®è®¡ç®—å¤§å›¾çš„ä¸­å¿ƒç‚¹+offset.xå³å¯
+        //yèµ·å§‹ä½ç½®è®¡ç®— ç”±äºèµ„æºçš„åæ ‡0,0å’Œunityä¸­çš„0,0 yè½´å‘ç›¸å å›¾ç‰‡çš„é«˜åº¦+offset.y å¤§å›¾çš„ä¸­å¿ƒç‚¹-å‡å»åç§»å€¼
         int startX = width / 2 + offset.x + offsetx;
         int StartY = height / 2 - (t2D.height + offset.y) + offsety;
         #endregion
 
-        //·Åµ½Ò»ÕÅ´óÍ¼ÉÏ
+        //æ”¾åˆ°ä¸€å¼ å¤§å›¾ä¸Š
         Texture2D pngTexture = new Texture2D(width, height);
 
         pngTexture.SetPixels(Global.defaultColors.ToArray());

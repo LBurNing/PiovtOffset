@@ -26,49 +26,49 @@ public class ExportRes
 {
     private static Dictionary<bool, string> genderFileNames = new Dictionary<bool, string>
     {
-        [false] = "ÄĞÄ£",
-        [true] = "Å®Ä£"
+        [false] = "ç”·æ¨¡",
+        [true] = "å¥³æ¨¡"
     };
 
 
     private static Dictionary<MirAction, string> eToc = new Dictionary<MirAction, string>
     {
-        [MirAction.NeiGuan] = "´ı»ú",
-        [MirAction.NeiGuan1] = "´ı»ú1",
-        [MirAction.NeiGuan2] = "´ı»ú2",
-        [MirAction.NeiGuan3] = "´ı»ú3",
-        [MirAction.NeiGuan4] = "´ı»ú4",
-        [MirAction.NeiGuan5] = "´ı»ú5",
-        [MirAction.NeiGuan6] = "´ı»ú6",
-        [MirAction.NeiGuan7] = "´ı»ú7",
-        [MirAction.NeiGuan8] = "´ı»ú8",
-        [MirAction.NeiGuan9] = "´ı»ú9",
-        [MirAction.NeiGuan10] = "´ı»ú10",
-        [MirAction.NeiGuan11] = "´ı»ú11",
-        [MirAction.NeiGuan12] = "´ı»ú12",
-        [MirAction.NeiGuan13] = "´ı»ú13",
-        [MirAction.NeiGuan14] = "´ı»ú14",
-        [MirAction.NeiGuan15] = "´ı»ú15",
-        [MirAction.NeiGuan16] = "´ı»ú16",
-        [MirAction.NeiGuan17] = "´ı»ú17",
-        [MirAction.NeiGuan18] = "´ı»ú18",
-        [MirAction.NeiGuan19] = "´ı»ú19",
-        [MirAction.ShiFa] = "Ê©·¨",
-        [MirAction.Attack1] = "¹¥»÷",
-        [MirAction.Attack2] = "¹¥»÷1",
-        [MirAction.Attack3] = "¹¥»÷2",
-        [MirAction.Attack4] = "¹¥»÷3",
-        [MirAction.Attack5] = "¹¥»÷4",
-        [MirAction.BeiJi] = "±»»÷",
-        [MirAction.BeiZhan] = "±¸Õ½",
-        [MirAction.Die] = "ËÀÍö",
-        [MirAction.Die1] = "ËÀÍö1",
-        [MirAction.Running] = "ÅÜ²½",
-        [MirAction.ShiQu] = "Ê°È¡",
-        [MirAction.Standing] = "´ı»ú",
-        [MirAction.Walking] = "×ßÂ·",
-        [MirAction.Standing1] = "´ı»ú1",
-        [MirAction.Standing2] = "´ı»ú2",
+        [MirAction.NeiGuan] = "å¾…æœº",
+        [MirAction.NeiGuan1] = "å¾…æœº1",
+        [MirAction.NeiGuan2] = "å¾…æœº2",
+        [MirAction.NeiGuan3] = "å¾…æœº3",
+        [MirAction.NeiGuan4] = "å¾…æœº4",
+        [MirAction.NeiGuan5] = "å¾…æœº5",
+        [MirAction.NeiGuan6] = "å¾…æœº6",
+        [MirAction.NeiGuan7] = "å¾…æœº7",
+        [MirAction.NeiGuan8] = "å¾…æœº8",
+        [MirAction.NeiGuan9] = "å¾…æœº9",
+        [MirAction.NeiGuan10] = "å¾…æœº10",
+        [MirAction.NeiGuan11] = "å¾…æœº11",
+        [MirAction.NeiGuan12] = "å¾…æœº12",
+        [MirAction.NeiGuan13] = "å¾…æœº13",
+        [MirAction.NeiGuan14] = "å¾…æœº14",
+        [MirAction.NeiGuan15] = "å¾…æœº15",
+        [MirAction.NeiGuan16] = "å¾…æœº16",
+        [MirAction.NeiGuan17] = "å¾…æœº17",
+        [MirAction.NeiGuan18] = "å¾…æœº18",
+        [MirAction.NeiGuan19] = "å¾…æœº19",
+        [MirAction.ShiFa] = "æ–½æ³•",
+        [MirAction.Attack1] = "æ”»å‡»",
+        [MirAction.Attack2] = "æ”»å‡»1",
+        [MirAction.Attack3] = "æ”»å‡»2",
+        [MirAction.Attack4] = "æ”»å‡»3",
+        [MirAction.Attack5] = "æ”»å‡»4",
+        [MirAction.BeiJi] = "è¢«å‡»",
+        [MirAction.BeiZhan] = "å¤‡æˆ˜",
+        [MirAction.Die] = "æ­»äº¡",
+        [MirAction.Die1] = "æ­»äº¡1",
+        [MirAction.Running] = "è·‘æ­¥",
+        [MirAction.ShiQu] = "æ‹¾å–",
+        [MirAction.Standing] = "å¾…æœº",
+        [MirAction.Walking] = "èµ°è·¯",
+        [MirAction.Standing1] = "å¾…æœº1",
+        [MirAction.Standing2] = "å¾…æœº2",
     };
 
     public static float frameTime = 0.01f;
@@ -78,26 +78,27 @@ public class ExportRes
         yield return new WaitForSeconds(0.2f);
         if (string.IsNullOrEmpty(sourcePath))
         {
-            progress(0, 0, "×ÊÔ´Â·¾¶²»ÄÜÎª¿Õ");
+            progress(0, 0, "èµ„æºè·¯å¾„ä¸èƒ½ä¸ºç©º");
             complete?.Invoke();
             yield break;
         }
 
         if (!Directory.Exists(sourcePath))
         {
-            progress(0, 0, "×ÊÔ´Â·¾¶²»´æÔÚ");
+            progress(0, 0, "èµ„æºè·¯å¾„ä¸å­˜åœ¨");
             complete?.Invoke();
             yield break;
         }
 
         if (string.IsNullOrEmpty(groupName))
         {
-            progress(0, 0, "×éÃû²»ÄÜÎª¿Õ");
+            progress(0, 0, "ç»„åä¸èƒ½ä¸ºç©º");
             complete?.Invoke();
             yield break;
         }
 
         Rename(sourcePath);
+        ImageTools.TxtFormat(sourcePath);
 
         int resIndex = 0;
         Dictionary<string, Frame> frames = frameSet.Name2Frames;
@@ -110,11 +111,11 @@ public class ExportRes
         foreach (var value in frames)
         {
             string actionName = value.Key;
-            string outPngParentPath = sourcePath + "/../ĞŞÕıºóµÄPNG×ÊÔ´/" + Path.GetFileName(sourcePath) + "/" + groupName + @"\" + actionName + @"\";
+            string outPngParentPath = sourcePath + "/../ä¿®æ­£åçš„PNGèµ„æº/" + Path.GetFileName(sourcePath) + "/" + groupName + @"\" + actionName + @"\";
 
             if (Directory.Exists(outPngParentPath))
             {
-                progress(0, 0, "×éÃûÖØ¸´");
+                progress(0, 0, "ç»„åé‡å¤");
                 complete?.Invoke();
                 yield break;
             }
@@ -180,7 +181,7 @@ public class ExportRes
         //if(maxCount > 100)
         //{
         //    progress?.Invoke(0, maxCount);
-        //    Debug.LogError("¸ÃÎÄ¼ş¼Ğ²»¿ÉÊ¹ÓÃÄÚ¹ÛÀàĞÍµ¼³ö");
+        //    Debug.LogError("è¯¥æ–‡ä»¶å¤¹ä¸å¯ä½¿ç”¨å†…è§‚ç±»å‹å¯¼å‡º");
         //    yield break;
         //}
 
@@ -193,7 +194,7 @@ public class ExportRes
 
         foreach (var value in frames)
         {
-            string outPngParentPath = sourcePath + @"\´ı»ú\";
+            string outPngParentPath = sourcePath + @"\å¾…æœº\";
             if (!Directory.Exists(outPngParentPath))
                 Directory.CreateDirectory(outPngParentPath);
 
@@ -255,7 +256,7 @@ public class ExportRes
         if (enumResType == EnumResType.NeiGuan)
         {
             progress?.Invoke(0, maxCount, "");
-            Debug.LogError("²»ÄÜÊ¹ÓÃÄÚ¹ÛÀàĞÍµ¼³ö¸ÃÎÄ¼ş¼Ğ");
+            Debug.LogError("ä¸èƒ½ä½¿ç”¨å†…è§‚ç±»å‹å¯¼å‡ºè¯¥æ–‡ä»¶å¤¹");
             yield break;
         }
 
@@ -277,7 +278,7 @@ public class ExportRes
             resMaxFrame = FrameSet.Wings.resMaxFrame;
 
         int resIndex = 0;
-        bool gender = false; //0ÄĞ 1Å®
+        bool gender = false; //0ç”· 1å¥³
         int maleResId = 1000;
         int femaleRedId = 999;
         int startFrameIndex = 0;
@@ -293,7 +294,7 @@ public class ExportRes
             {
                 string actionName = eToc[value.Key];
                 int index = gender ? femaleRedId : maleResId;
-                string outPngParentPath = resData.resPath + "/../ĞŞÕıºóµÄPNG×ÊÔ´/" + Path.GetFileName(resData.resPath) + "/" + genderFileName + @"\" + index + @"\" + actionName + @"\";
+                string outPngParentPath = resData.resPath + "/../ä¿®æ­£åçš„PNGèµ„æº/" + Path.GetFileName(resData.resPath) + "/" + genderFileName + @"\" + index + @"\" + actionName + @"\";
 
                 if (!Directory.Exists(outPngParentPath))
                     Directory.CreateDirectory(outPngParentPath);

@@ -90,6 +90,12 @@ public class ImageTools
         CmdUtil.ProcessCommand(Global.scaleImageToolPath, string.Format("{0} {1} {2} {3} {4} {5}", path, path, proportion, offset.x, offset.y, dir));
     }
 
+    public static void TxtFormat(string path)
+    {
+        path = path.Replace(@"\", "//");
+        CmdUtil.ProcessCommand(Global.txtFormat, string.Format("{0} {1}", path, path));
+    }
+
     public static void ScaleTexture(string path, string outPath, float proportion, Vector2Int offset)
     {
         if (proportion > 0.999f && proportion <= 1 && offset == Vector2Int.zero)
@@ -164,9 +170,9 @@ public class ImageTools
         modify = null;
     }
 
-    // Ëõ·ÅÎÆÀíµÄ·½·¨
+    // ç¼©æ”¾çº¹ç†çš„æ–¹æ³•
     /// <summary>
-    /// Ëõ·ÅTextur2D
+    /// ç¼©æ”¾Textur2D
     /// </summary>
     /// <param name="source"></param>
     /// <param name="targetWidth"></param>
