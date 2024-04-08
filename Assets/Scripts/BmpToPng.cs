@@ -57,6 +57,9 @@ public class BmpToPng
         int height = t2D.height * 2 + Math.Abs(offset.y) + Math.Abs(offsety) + 100;
         #endregion
 
+        if (width % 2 != 0) width++;
+        if (height % 2 != 0) height++;
+
         #region 起始点计算
         //该资源坐标系左上角为0,0点
         //unity中左下角为0,0点
@@ -80,17 +83,6 @@ public class BmpToPng
                 if (color == Color.clear)
                     continue;
 
-                float r = color.r;
-                float g = color.g;
-                float b = color.b;
-                float a = color.a;
-
-                if (r == 0 && g == 0 && b == 0)
-                {
-                    a = 0;
-                }
-
-                color = new Color(r, g, b, a);
                 pngTexture.SetPixel(startX + colori, StartY + colorj, color);
             }
         }
