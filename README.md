@@ -4,4 +4,4 @@
 功能<br>
 1.重心的重定向、图片镜像、旋转、缩放、位移、去除图片黑背景、叠加混合、动态图标的生成、一组图片占用图集大小检测<br>
 
-![Example Image](Images/image.png)
+![Example Image](image.png)
