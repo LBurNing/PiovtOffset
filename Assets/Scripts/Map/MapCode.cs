@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 
 public class CellInfo
@@ -259,6 +260,11 @@ public class MapReader
         }
     }
 
+    /// <summary>
+    /// offset = 52这个值要根据不同的.map文件适当调整，有的偏移为54 有的52
+    /// BackImage为图片库的index比如 Tiles250， 250就是图片库的index
+    /// BackIndex为图片索引, 比如Tiles250图片库中的某个index
+    /// </summary>
     private void LoadMapType2()
     {
         try
@@ -274,7 +280,8 @@ public class MapReader
             offset = 52;
             for (int x = 0; x < Width; x++)
                 for (int y = 0; y < Height; y++)
-                {//14
+                {
+                    //14
                     MapCells[x, y] = new CellInfo();
                     MapCells[x, y].BackImage = (short)BitConverter.ToInt16(Bytes, offset);
                     offset += 2;
@@ -286,11 +293,10 @@ public class MapReader
                     MapCells[x, y].DoorOffset = Bytes[offset++];
                     MapCells[x, y].FrontAnimationFrame = Bytes[offset++];
                     MapCells[x, y].FrontAnimationTick = Bytes[offset++];
-                    MapCells[x, y].FrontIndex = (short)(Bytes[offset++] + 120);
+                    MapCells[x, y].FrontIndex = (short)(Bytes[offset++] + 2);
                     MapCells[x, y].Light = Bytes[offset++];
-                    MapCells[x, y].BackIndex = (short)(Bytes[offset++] + 100);
-
-                    MapCells[x, y].MiddleIndex = (short)(Bytes[offset++] + 110);
+                    MapCells[x, y].BackIndex = (short)(Bytes[offset++]);
+                    MapCells[x, y].MiddleIndex = (short)(Bytes[offset++]);
                     if ((MapCells[x, y].BackImage & 0x8000) != 0)
                         MapCells[x, y].BackImage = (MapCells[x, y].BackImage & 0x7FFF) | 0x20000000;
 
@@ -302,6 +308,21 @@ public class MapReader
                     {
                         UnityEngine.Debug.LogError(FileName + " FrontAnimationFrame: " + MapCells[x, y].FrontAnimationFrame);
                     }
+
+                    //if (MapCells[x, y].BackImage > 0)
+                    //{
+                    //    UnityEngine.Debug.LogError($"MapCells[x, y].BackImage: {MapCells[x, y].BackImage}, MapCells[x, y].BackIndex: {MapCells[x, y].BackIndex}");
+                    //}
+
+                    //if (MapCells[x, y].MiddleImage > 0)
+                    //{
+                    //    UnityEngine.Debug.LogError($"MapCells[x, y].MiddleImage: {MapCells[x, y].MiddleImage}, MapCells[x, y].MiddleIndex: {MapCells[x, y].MiddleIndex}");
+                    //}
+
+                    //if (MapCells[x, y].FrontImage > 0)
+                    //{
+                    //    UnityEngine.Debug.LogError($"MapCells[x, y].FrontImage: {MapCells[x, y].FrontImage}, MapCells[x, y].FrontIndex: {MapCells[x, y].FrontIndex}");
+                    //}
 
                     if (MapCells[x, y].BackIndex > 100)
                     {

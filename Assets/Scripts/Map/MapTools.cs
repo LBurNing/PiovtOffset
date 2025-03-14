@@ -4,6 +4,7 @@ using UnityEngine;
 using System.IO;
 using System;
 using System.Text.RegularExpressions;
+using static MLibrary;
 
 public class MapResData
 {
@@ -76,6 +77,7 @@ public static class MapTools
     public static string outMapRootPath;
     private static Action<int, int, string> progressCallback = null;
     private static int animationIndex = 50000;
+    private static Dictionary<int, string> index2LocalPath = new Dictionary<int, string>();
 
     public static IEnumerator ReadMapData(Action<int, int, string> progress = null)
     {
@@ -94,6 +96,7 @@ public static class MapTools
 
                 Libraries.MapLibs[resData.index != -1 ?resData.index : resData.Index] = new MLibrary(resData.path);
                 Libraries.ListItems[resData.index != -1 ? resData.index : resData.Index] = new ListItem(resData.path, resData.Index);
+                index2LocalPath[resData.Index] = $"{resData.path}/";
             }
 
             if (string.IsNullOrEmpty(data.outPath))
@@ -226,12 +229,12 @@ public static class MapTools
         int drawX = 0;
         int progress = 0;
 
-        for (int y = map.Height; y >= -1; y--)
+        for (int y = map.Height - 1; y >= 0; y--)
         {
             if (y % 2 != 0)
             {
                 tileIndex += map.Width;
-                continue;
+                //continue;
             }
 
             if (y >= mapHeight)
@@ -241,11 +244,11 @@ public static class MapTools
             }
 
             drawY = y * CellHeight;
-            for (int x = -1; x <= map.Width; x++)
+            for (int x = 0; x < map.Width; x++)
             {
                 tileIndex++;
-                if (x % 2 != 0)
-                    continue;
+                //if (x % 2 != 0)
+                //    continue;
 
                 if (x >= mapWidth)
                     continue;
@@ -422,7 +425,7 @@ public static class MapTools
                         dirIndex++;
                         for (int i = index - 1; i < index + animation - 1; i++)
                         {
-                            Save(libIndex, i, dirIndex, blend);
+                            //Save(libIndex, i, dirIndex, blend);
                         }
                     }
                     //如果没动画 
@@ -463,19 +466,38 @@ public static class MapTools
         if (!Directory.Exists(outpath))
             Directory.CreateDirectory(outpath);
 
-        MLibrary.MImage mImage = Libraries.MapLibs[libIndex].GetMImage(index);
-        if (mImage.Image == null)
+        string localPath = string.Empty;
+        if (index2LocalPath.ContainsKey(libIndex))
+            localPath = index2LocalPath[libIndex];
+
+        string localIndex = index.ToString().PadLeft(5, '0');
+        localPath = $@"{localPath}{localIndex}.PNG";
+        byte[] buffer = null;
+
+        if (File.Exists(localPath))
         {
-            return;
+            buffer = File.ReadAllBytes(localPath);
+        }
+        else
+        {
+
+            MLibrary.MImage mImage = Libraries.MapLibs[libIndex].GetMImage(index);
+            if (mImage.Image == null)
+            {
+                return;
+            }
+
+            MemoryStream ms = new MemoryStream();
+            mImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+
+            buffer = new byte[ms.Length];
+            ms.Position = 0;
+            ms.Read(buffer, 0, buffer.Length);
+            ms.Close();
+            ms.Dispose();
         }
 
-        MemoryStream ms = new MemoryStream();
-        mImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-
-        var buffer = new byte[ms.Length];
-        ms.Position = 0;
-        ms.Read(buffer, 0, buffer.Length);
-        Texture2D t2D = new Texture2D(mImage.Width, mImage.Height);
+        Texture2D t2D = new Texture2D(1, 1);
         t2D.LoadImage(buffer);
         t2D.Apply();
 
@@ -512,8 +534,7 @@ public static class MapTools
         Utils.SavePng(outpath + animationIndex + ".png", t2D);
         animationIndex++;
         UnityEngine.Object.DestroyImmediate(t2D);
-        ms.Close();
-        ms.Dispose();
+     
     }
 
     private static void DrawFront(int libIndex, int index, int x, int y, bool isAlpha = false)
@@ -523,19 +544,37 @@ public static class MapTools
         if (mapTiles == null)
             mapTiles = new GameObject(mapTilesName);
 
-        MLibrary.MImage mImage = Libraries.MapLibs[libIndex].GetMImage(index);
-        if (mImage.Image == null)
+        string localPath = string.Empty;
+        if (index2LocalPath.ContainsKey(libIndex))
+            localPath = index2LocalPath[libIndex];
+
+        string localIndex = index.ToString().PadLeft(5, '0');
+        localPath = $@"{localPath}{localIndex}.PNG";
+        byte[] buffer = null;
+
+        if (File.Exists(localPath))
         {
-            return;
+            buffer = File.ReadAllBytes(localPath);
+        }
+        else
+        {
+            MLibrary.MImage mImage = Libraries.MapLibs[libIndex].GetMImage(index);
+            if (mImage.Image == null)
+            {
+                return;
+            }
+
+            MemoryStream ms = new MemoryStream();
+            mImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+
+            buffer = new byte[ms.Length];
+            ms.Position = 0;
+            ms.Read(buffer, 0, buffer.Length);
+            ms.Close();
+            ms.Dispose();
         }
 
-        MemoryStream ms = new MemoryStream();
-        mImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-
-        var buffer = new byte[ms.Length];
-        ms.Position = 0;
-        ms.Read(buffer, 0, buffer.Length);
-        Texture2D t2D = new Texture2D(mImage.Width, mImage.Height);
+        Texture2D t2D = new Texture2D(1, 1);
         t2D.LoadImage(buffer);
         t2D.Apply();
 
@@ -569,10 +608,8 @@ public static class MapTools
             t2D.Apply();
         }
 
-        SetMapColor(x, y, t2D, mImage);
+        SetMapColor(x, y, t2D, t2D.width, t2D.height);
         UnityEngine.Object.DestroyImmediate(t2D);
-        ms.Close();
-        ms.Dispose();
     }
 
     private static void DrawMidd(int libIndex, int index, int x, int y)
@@ -600,7 +637,7 @@ public static class MapTools
 
         //DrawTileTexture(libIndex, index, x, y, t2D, mImage);
 
-        SetMapColor(x, y, t2D, mImage);
+        SetMapColor(x, y, t2D, mImage.Width, mImage.Height);
 
         UnityEngine.Object.DestroyImmediate(t2D);
         ms.Close();
@@ -614,37 +651,50 @@ public static class MapTools
         if (mapTiles == null)
             mapTiles = new GameObject(mapTilesName);
 
-        MLibrary.MImage mImage = Libraries.MapLibs[libIndex].GetMImage(index);
-        if (mImage.Image == null)
+        string localPath = string.Empty;
+        if (index2LocalPath.ContainsKey(libIndex))
+            localPath = index2LocalPath[libIndex];
+
+        string localIndex = index.ToString().PadLeft(5, '0');
+        localPath = $@"{localPath}{localIndex}.PNG";
+        byte[] buffer = null;
+        if (File.Exists(localPath))
         {
-            return;
+            buffer = File.ReadAllBytes(localPath);
+        }
+        else 
+        {
+            MLibrary.MImage mImage = Libraries.MapLibs[libIndex].GetMImage(index);
+            if (mImage.Image == null)
+            {
+                return;
+            }
+
+            MemoryStream ms = new MemoryStream();
+            mImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
+            buffer = new byte[ms.Length];
+            ms.Position = 0;
+            ms.Read(buffer, 0, buffer.Length);
+            ms.Close();
+            ms.Dispose();
         }
 
-        MemoryStream ms = new MemoryStream();
-        mImage.Image.Save(ms, System.Drawing.Imaging.ImageFormat.Png);
-
-        var buffer = new byte[ms.Length];
-        ms.Position = 0;
-        ms.Read(buffer, 0, buffer.Length);
-        Texture2D t2D = new Texture2D(mImage.Width, mImage.Height);
+        Texture2D t2D = new Texture2D(1, 1);
         t2D.LoadImage(buffer);
         t2D.Apply();
 
         //DrawTileTexture(libIndex, index, x, y, t2D, mImage);
-        SetMapColor(x, y, t2D, mImage);
-
+        SetMapColor(x, y, t2D, t2D.width, t2D.height);
         UnityEngine.Object.DestroyImmediate(t2D);
-        ms.Close();
-        ms.Dispose();
     }
 
-    private static void SetMapColor(int x, int y, Texture2D t2D, MLibrary.MImage mImage)
+    private static void SetMapColor(int x, int y, Texture2D t2D, int width, int height)
     {
-        y = map.PixelHeight - y - mImage.Height;
+        y = map.PixelHeight - y - height;
 
-        for (int i = 0; i < mImage.Width; i++)
+        for (int i = 0; i < width; i++)
         {
-            for (int j = 0; j < mImage.Height; j++)
+            for (int j = 0; j < height; j++)
             {
                 Color color = t2D.GetPixel(i, j);
                 if (color != Color.clear)
